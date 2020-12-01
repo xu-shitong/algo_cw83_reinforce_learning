@@ -37,12 +37,14 @@ logic strat gs ai
     in logic' gs ai {turn = turn ai + 1}
 
 data AIState = AIState
-  { turn :: Turns
+  { turn :: Turns,
+    rushTarget :: Maybe PlanetId
   } deriving Generic
  
 initialState :: AIState
 initialState = AIState
-  { turn = 0
+  { turn = 0,
+    rushTarget = Nothing
   }
 
 type Log = [String]
@@ -55,13 +57,21 @@ enemyPlanet (Planet (Owned Player2) _ _) = True
 enemyPlanet _                            = False
 
 findEnemyPlanet :: GameState -> Maybe PlanetId
-findEnemyPlanet = undefined
+findEnemyPlanet st
+  | null l    = Nothing
+  | otherwise = (Just . fst . head) l
+    where l = M.toList (M.filter enemyPlanet ps)
+          (GameState ps _ _) = st
 
 send :: WormholeId -> Maybe Ships -> GameState -> [Order]
-send wId mShips st = undefined
- where
-  Wormhole (Source src) _ _ = lookupWormhole wId st
-  planet@(Planet _ totalShips _) = lookupPlanet src st
+send wId mShips st
+  | owner == Neutral || owner == (Owned Player2) = []
+  | mShips == Nothing            = [Order wId totalShips]
+  | fromJust mShips > totalShips = [Order wId totalShips]
+  | otherwise = [Order wId (fromJust mShips)]
+    where
+      Wormhole (Source src) _ _ = lookupWormhole wId st
+      planet@(Planet owner totalShips _) = lookupPlanet src st
 
 shortestPath :: PlanetId -> PlanetId -> GameState 
              -> Maybe (Path (WormholeId, Wormhole))
@@ -87,7 +97,15 @@ lookupPlanet pId (GameState planets _ _)
 
 attackFromAll :: PlanetId -> GameState -> [Order]
 attackFromAll targetId gs
-  = undefined
+  = map pathToOrder paths
+    where paths   = map fromJust (filter (\x -> not (isNothing x)) paths')
+          paths'  = map (\x -> shortestPath (fst x) targetId gs) (M.toList planets)
+          planets = ourPlanets gs
+          pathToOrder :: (Path (WormholeId, Wormhole)) -> Order
+          pathToOrder (Path _ es) = Order wid mShip
+            where (wid, wh)          = last es
+                  (Planet _ mShip _) = lookupPlanet (source wh) gs
+          
 
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
