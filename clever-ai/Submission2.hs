@@ -109,7 +109,15 @@ attackFromAll targetId gs
 
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
-zergRush gs ai = undefined
+zergRush gs ai
+  | justCurrTarget == Nothing || owner == Owned Player1
+      = (ordersToNew, ["Player 1 is ordering full attack"], ai {rushTarget = newtarget})
+  | otherwise = (ordersToOld, ["Player 1 is ordering full attack"], ai)
+    where justCurrTarget = rushTarget ai
+          (Planet owner _ _) = lookupPlanet (fromJust justCurrTarget) gs
+          newtarget = findEnemyPlanet gs
+          ordersToNew = if isNothing newtarget then [] else attackFromAll (fromJust newtarget) gs
+          ordersToOld = attackFromAll (fromJust justCurrTarget) gs
 
 newtype PageRank = PageRank Double
   deriving (Num, Eq, Ord, Fractional)
