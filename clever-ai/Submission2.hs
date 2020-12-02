@@ -38,13 +38,15 @@ logic strat gs ai
 
 data AIState = AIState
   { turn :: Turns,
-    rushTarget :: Maybe PlanetId
+    rushTarget :: Maybe PlanetId,
+    planetRanking :: Maybe PlanetRanks
   } deriving Generic
  
 initialState :: AIState
 initialState = AIState
   { turn = 0,
-    rushTarget = Nothing
+    rushTarget = Nothing,
+    planetRanking = Nothing
   }
 
 type Log = [String]
@@ -260,7 +262,33 @@ checkPlanetRanks = sum . M.elems
 
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
-planetRankRush _ _ = undefined
+planetRankRush gs ai
+  | isFirstTime = (orders, [], ai { planetRanking = Just rank })
+  | isNothing target = ([], ["There is no more planet to conquer!"], ai)
+  | otherwise = (orders, [], ai)
+    where isFirstTime = planetRanking ai == Nothing
+          rank = planetRank gs
+          orders = attackFromAll (fromJust target) gs
+          target = if isFirstTime then getTarget rank else getTarget (fromJust (planetRanking ai))
+
+          getTarget :: PlanetRanks -> Maybe PlanetId
+          getTarget rks
+            | M.null rks = Nothing
+            | owner /= (Owned Player1) = Just pid
+            | otherwise = getTarget rks'
+              where (Planet owner _ _) = lookupPlanet pid gs
+                    ((pid, _), rks') = deleteAndFindMax rks
+          
+          deleteAndFindMax :: PlanetRanks -> ((PlanetId, PlanetRank), PlanetRanks)
+          deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
+            where allPlanetId = M.keys rks
+                  deleteAndFindMax' :: [PlanetId] -> (PlanetId, PlanetRank) -> ((PlanetId, PlanetRank), PlanetRanks)
+                  deleteAndFindMax' [] p = (p, M.delete (fst p) rks)
+                  deleteAndFindMax' (x:xs) p
+                    | r' <= r = deleteAndFindMax' xs p
+                    | otherwise = deleteAndFindMax' xs (x, r')
+                      where r' = rks M.! x
+                            r  = snd p
 
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
