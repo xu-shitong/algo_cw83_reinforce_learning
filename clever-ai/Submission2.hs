@@ -39,14 +39,16 @@ logic strat gs ai
 data AIState = AIState
   { turn :: Turns,
     rushTarget :: Maybe PlanetId,
-    planetRanking :: Maybe PlanetRanks
+    planetRanking :: Maybe PlanetRanks,
+    gain :: Double
   } deriving Generic
  
 initialState :: AIState
 initialState = AIState
   { turn = 0,
     rushTarget = Nothing,
-    planetRanking = Nothing
+    planetRanking = Nothing,
+    gain = 0
   }
 
 type Log = [String]
@@ -269,26 +271,26 @@ planetRankRush gs ai
     where isFirstTime = planetRanking ai == Nothing
           rank = planetRank gs
           orders = attackFromAll (fromJust target) gs
-          target = if isFirstTime then getTarget rank else getTarget (fromJust (planetRanking ai))
+          target = if isFirstTime then getTarget gs rank else getTarget gs (fromJust (planetRanking ai))
 
-          getTarget :: PlanetRanks -> Maybe PlanetId
-          getTarget rks
-            | M.null rks = Nothing
-            | owner /= (Owned Player1) = Just pid
-            | otherwise = getTarget rks'
-              where (Planet owner _ _) = lookupPlanet pid gs
-                    ((pid, _), rks') = deleteAndFindMax rks
-          
-          deleteAndFindMax :: PlanetRanks -> ((PlanetId, PlanetRank), PlanetRanks)
-          deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
-            where allPlanetId = M.keys rks
-                  deleteAndFindMax' :: [PlanetId] -> (PlanetId, PlanetRank) -> ((PlanetId, PlanetRank), PlanetRanks)
-                  deleteAndFindMax' [] p = (p, M.delete (fst p) rks)
-                  deleteAndFindMax' (x:xs) p
-                    | r' <= r = deleteAndFindMax' xs p
-                    | otherwise = deleteAndFindMax' xs (x, r')
-                      where r' = rks M.! x
-                            r  = snd p
+getTarget :: GameState -> PlanetRanks -> Maybe PlanetId
+getTarget gs rks
+  | M.null rks = Nothing
+  | owner /= (Owned Player1) = Just pid
+  | otherwise = getTarget gs rks'
+    where (Planet owner _ _) = lookupPlanet pid gs
+          ((pid, _), rks') = deleteAndFindMax rks
+
+deleteAndFindMax :: PlanetRanks -> ((PlanetId, PlanetRank), PlanetRanks)
+deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
+  where allPlanetId = M.keys rks
+        deleteAndFindMax' :: [PlanetId] -> (PlanetId, PlanetRank) -> ((PlanetId, PlanetRank), PlanetRanks)
+        deleteAndFindMax' [] p = (p, M.delete (fst p) rks)
+        deleteAndFindMax' (x:xs) p
+          | r' <= r = deleteAndFindMax' xs p
+          | otherwise = deleteAndFindMax' xs (x, r')
+            where r' = rks M.! x
+                  r  = snd p
 
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
