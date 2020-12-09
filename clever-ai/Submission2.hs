@@ -296,6 +296,46 @@ skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet _ _ = undefined
 
+type Gain = Double
+
+computeGain :: GameState -> AIState -> PlanetId -> PlanetId -> [Double] -> (Gain, Log, AIState)
+computeGain gs ai srcpid destpid params
+  | isFirstTime = (gain, ["Gain computed"], ai { planetRanking = Just rank } )
+  | otherwise   = (gain, ["Gain computed"], ai )
+      where isFirstTime = planetRanking ai == Nothing
+            gain = (params !! 0) * pagerank + (params !! 1) * (fromInteger turns) + (params !! 2) * (fromIntegral damaged) + (params !! 3) * (fromIntegral compromised)
+            pagerank :: Double
+            pagerank
+              | planetRanking ai == Nothing = let (PlanetRank res) = rank M.! destpid in res
+              | otherwise = let (PlanetRank res) = (fromJust (planetRanking ai)) M.! destpid in res
+            (Path turns _) = (fromJust (shortestPath srcpid destpid gs))
+            damaged :: Int
+            damaged
+              | destOwner == (Owned Player2) && destShips < srcShips = destShips             --reward here
+              | destOwner == (Owned Player2) && destShips >= srcShips = srcShips - destShips --punishment here
+              | otherwise = 0
+            compromised :: Int
+            compromised
+              | destOwner /= (Owned Player1) && destShips < srcShips = destShips --punishment here
+              | destOwner /= (Owned Player1) && destShips >= srcShips = srcShips - destShips --punishment here
+              | otherwise = 0
+            rank   = planetRank gs
+            target = lookupPlanet destpid gs
+            (Planet destOwner (Ships destShips) destGrowth) = lookupPlanet destpid gs
+            (Planet _ (Ships srcShips) srcGrowth) = lookupPlanet srcpid gs
+
+computeDecision :: GameState -> AIState -> [Double] -> ([Order], Log, AIState)
+computeDecision gs ai params = (order, [], ai { gain = (gain ai) + g })
+  where order = undefined --should return the wormhole corresponding to the attackSrc and attackDest
+        ((g, _, _), attackSrc, attackDest) = maximumBy cmp gains
+        gains = concat [ [ (computeGain gs ai srcpid destpid params, srcpid, destpid) | destpid <- map target (edgesFrom gs srcpid) ] | srcpid <- ourPlanets ]
+        ourPlanets = filter (\x -> ourPlanet (lookupPlanet x gs)) (vertices gs)
+        cmp :: Ord a => (a, b, c) -> (a, b, c) -> Ordering
+        cmp ((g1, _, _), _, _) ((g2, _, _), _, _)
+          | g1 > g2 = GT
+          | g1 < g2 = LT
+          | otherwise = EQ
+
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
  
