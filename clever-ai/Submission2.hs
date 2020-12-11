@@ -38,11 +38,13 @@ logic strat gs ai
 
 data AIState = AIState
   { turn :: Turns
+  , rushTarget :: Maybe PlanetId
   } deriving Generic
  
 initialState :: AIState
 initialState = AIState
   { turn = 0
+  , rushTarget = Nothing
   }
 
 type Log = [String]
@@ -55,13 +57,21 @@ enemyPlanet (Planet (Owned Player2) _ _) = True
 enemyPlanet _                            = False
 
 findEnemyPlanet :: GameState -> Maybe PlanetId
-findEnemyPlanet = undefined
+findEnemyPlanet g@(GameState ps _ _)
+  | null enemies = Nothing
+  | otherwise    = Just . fst . head $ enemies
+  where 
+    enemies = M.toList (M.filter enemyPlanet ps)
 
 send :: WormholeId -> Maybe Ships -> GameState -> [Order]
-send wId mShips st = undefined
- where
-  Wormhole (Source src) _ _ = lookupWormhole wId st
-  planet@(Planet _ totalShips _) = lookupPlanet src st
+send wId ms st 
+  | o == Neutral || o /= (Owned Player1) = []
+  | isNothing ms || amount >= totalShips = [(Order wId (Ships totalShips))]
+  | otherwise                            = [(Order wId mShips)]
+  where
+    (Just mShips@(Ships amount)) = ms
+    Wormhole (Source src) _ _ = lookupWormhole wId st
+    planet@(Planet o (Ships totalShips) _) = lookupPlanet src st
 
 shortestPath :: PlanetId -> PlanetId -> GameState 
              -> Maybe (Path (WormholeId, Wormhole))
@@ -86,13 +96,25 @@ lookupPlanet pId (GameState planets _ _)
   = planets M.! pId
 
 attackFromAll :: PlanetId -> GameState -> [Order]
-attackFromAll targetId gs
-  = undefined
+attackFromAll targetId gs@(GameState ps ws fs)
+  = concat [ send wId Nothing gs | (wId, w@(Wormhole _ (Target t) _)) <- nextWormholes]
+  where 
+
+    ourPs = M.toList (ourPlanets gs)
+    maybePaths = [ shortestPath pId targetId gs | (pId, p@(Planet _ s _)) <- ourPs]
+    nextWormholes = map (\(Just (Path _ es)) -> last es) (filter (\x -> not (isNothing x)) maybePaths)
 
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
-zergRush gs ai = undefined
-
+zergRush gs ai
+  | t == Nothing = zergRush gs ai {rushTarget = findEnemyPlanet gs}
+  | o == Player1 = zergRush gs ai {rushTarget = findEnemyPlanet gs}
+  | otherwise    = (attackFromAll tId gs, ["attacking " ++ (show tId)], ai)
+  where 
+    t = rushTarget ai
+    tId = fromJust t
+    target@(Planet (Owned o) _ _) = lookupPlanet tId gs 
+    
 newtype PageRank = PageRank Double
   deriving (Num, Eq, Ord, Fractional)
  
@@ -113,7 +135,10 @@ example1 = [("a","b",1), ("a","c",1), ("a","d",1),
             ("b","a",1), ("c","a",1), ("d","a",1), ("c","d",1)]
 
 initPageRank' :: Map pageId a -> PageRanks pageId
-initPageRank' = undefined
+initPageRank' m 
+  = M.map (\x -> (PageRank (1 / fromIntegral n))) m
+  where 
+    n = M.size m
 
 nextPageRank :: (Ord pageId, Edge e pageId, Graph g e pageId) => 
   g -> PageRanks pageId -> pageId -> PageRank
@@ -163,7 +188,8 @@ iterateMaybe f x = x : maybe [] (iterateMaybe f) (f x)
 
 pageRank' :: (Ord pageId, Graph g e pageId) =>
   g -> PageRanks pageId
-pageRank' g = undefined
+pageRank' g
+  = last . (take 200) $ (pageRanks' g 0.0001 )
 
 example2 :: GameState
 example2 = GameState planets wormholes fleets where
