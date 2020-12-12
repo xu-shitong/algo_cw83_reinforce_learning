@@ -40,6 +40,9 @@ data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
   , ranks :: PlanetRanks
+  , strategyPoints :: PlanetRanks
+  , params :: [Double]
+  , defensiveLevel :: Double
   } deriving Generic
  
 initialState :: AIState
@@ -47,6 +50,9 @@ initialState = AIState
   { turn = 0
   , rushTarget = Nothing
   , ranks = M.empty 
+  , strategyPoints = M.empty
+  , params = [0, 0, 0, 0]
+  , defensiveLevel = 0
   }
 
 type Log = [String]
@@ -265,7 +271,7 @@ checkPlanetRanks = sum . M.elems
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
 planetRankRush g ai
-  | turn ai == 0 = planetRankRush g ai {ranks = Just calRank}
+  | turn ai == 0 = planetRankRush g ai {ranks = calRank}
   | t == Nothing = case (M.null enemyRanks) of
                    True  -> ([], ["no ememy or nutral planet found"], ai)
                    False -> planetRankRush g ai {rushTarget = (Just pId)}
@@ -277,9 +283,68 @@ planetRankRush g ai
     t = rushTarget ai
     tId = fromJust t
 
+{-  
+  in the first turn, 
+  calculate:
+    the overall importance of each planet :: planetRanks
+    all planet's rank :: planetRanks
+  predefine: 
+    (todo) parameters for each factor :: [Double]
+  store in aistate
+-}
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
-skynet _ _ = undefined
+skynet g ai 
+  | turn ai == 0 = skynet g ai {ranks = calRank}
+  | otherwise = (M.foldrWithKey generateAttack [] ourPs, [], ai)
+  where 
+    calRank = planetRank g 
+    ourPs = ourPlanets g 
+
+    generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
+    generateAttack pId (Planet _ (Ships s) _) os 
+      = [ (Order wId (Ships (round (totAttack / rank)))) | (pId', wId, rank) <- targets ]
+      where 
+        totRanks = sum . (map (\(_, _, x) -> x)) $ targets 
+        targets = applyParams pId g ai 
+        currDefenceRate = dangerRaiting pId g
+
+        -- +1 here is to prevent divide by 0 error
+        totAttack = (fromIntegral s) * ((defensiveLevel ai) * totRanks) / (fromIntegral (currDefenceRate + 1) + totRanks)
+
+-- given a planet id, return orders to send ships to neighbours
+applyParams :: PlanetId -> GameState -> AIState -> [(PlanetId, WormholeId, Double)]
+applyParams pId g ai 
+  = [ (pId,
+      wId, 
+      pGro * (fromIntegral gro) + 
+      pPr * pr + 
+      pT * t -
+      pDr * fromIntegral dr) | (pId, wId, gro, (PlanetRank pr), t, dr) <- adjList]
+  where 
+    (pGro : pPr : pT : pDr : []) = params ai 
+    currP = lookupPlanet pId g 
+    adjList = [ ( target w
+                , wId
+                , (\(Planet _ _ (Growth g)) -> g) (lookupPlanet (target w) g)
+                , (ranks ai) M.! (target w) 
+                , fromInteger (weight w) 
+                , dangerRaiting (target w)  g)
+                | (wId, w) <- edgesFrom g pId ]
+
+-- coumpute sum of opponent ships in adjacent vertexs 
+-- and multiply of wieght for all adjacent enemy vertices to attect the vertice
+dangerRaiting :: PlanetId -> GameState -> Int
+dangerRaiting pId g 
+  = foldl drHelp 0 (edgesFrom g pId)
+  where 
+
+    drHelp :: Int -> (WormholeId, Wormhole) -> Int
+    drHelp n (_, w) 
+      | enemyPlanet p = n + s * (fromInteger (weight w))
+      | otherwise     = n
+      where 
+        p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
