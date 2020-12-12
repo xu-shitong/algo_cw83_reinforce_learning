@@ -39,12 +39,14 @@ logic strat gs ai
 data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
+  , ranks :: PlanetRanks
   } deriving Generic
  
 initialState :: AIState
 initialState = AIState
   { turn = 0
   , rushTarget = Nothing
+  , ranks = M.empty 
   }
 
 type Log = [String]
@@ -58,10 +60,10 @@ enemyPlanet _                            = False
 
 findEnemyPlanet :: GameState -> Maybe PlanetId
 findEnemyPlanet g@(GameState ps _ _)
-  | null enemies = Nothing
-  | otherwise    = Just . fst . head $ enemies
+  | M.null enemies = Nothing
+  | otherwise      = Just . fst . head . M.toList $ enemies
   where 
-    enemies = M.toList (M.filter enemyPlanet ps)
+    enemies = M.filter enemyPlanet ps
 
 send :: WormholeId -> Maybe Ships -> GameState -> [Order]
 send wId ms st 
@@ -246,17 +248,34 @@ nextPlanetRank g@(GameState planets _ _) pr i =
   growth i  = (\(Planet _ _ g) -> fromIntegral g) 
                                   (planets M.! i)
   targets :: PlanetId -> [PlanetId]
-  targets i = undefined
+  targets i 
+    = map (\(_, wh) -> target wh) (edgesFrom g i)
  
   growths :: PlanetId -> PlanetRank
-  growths j = undefined
+  growths j
+    = PlanetRank (fromIntegral . sum $ growthNums)
+    where 
+      ws = wormholesTo (Target j) g
+      growthNums = M.map ((\(Planet _ _ g) -> g) . (\x -> lookupPlanet x g) . source) ws 
+
 
 checkPlanetRanks :: PlanetRanks -> PlanetRank
 checkPlanetRanks = sum . M.elems
 
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
-planetRankRush _ _ = undefined
+planetRankRush g ai
+  | turn ai == 0 = planetRankRush g ai {ranks = Just calRank}
+  | t == Nothing = case (M.null enemyRanks) of
+                   True  -> ([], ["no ememy or nutral planet found"], ai)
+                   False -> planetRankRush g ai {rushTarget = (Just pId)}
+  | otherwise    = (attackFromAll tId g, ["attacking " ++ (show tId)], ai)
+  where 
+    calRank = planetRank g 
+    enemyRanks = M.filterWithKey (\pId r -> not (ourPlanet (lookupPlanet pId g))) (ranks ai)
+    (pId, r) = M.findMax enemyRanks
+    t = rushTarget ai
+    tId = fromJust t
 
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
