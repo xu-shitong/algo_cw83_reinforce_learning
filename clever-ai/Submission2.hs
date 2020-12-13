@@ -16,6 +16,9 @@ import Text.Printf
 import Control.DeepSeq
 import GHC.Generics
 
+import System.IO  
+import Control.Monad
+
 deriving instance (Integral Growth)
 deriving instance (Enum Growth)
 deriving instance (Real Growth)
@@ -54,6 +57,14 @@ initialState = AIState
   , params = [0, 0, 0, 0]
   , defensiveLevel = 0
   }
+
+readParams :: IO ([Double])
+readParams = do  
+        contents <- readFile "clever-ai/test.txt"
+        return (map readDouble . words $ contents)
+
+readDouble :: String -> Double
+readDouble = read
 
 type Log = [String]
 
@@ -309,12 +320,25 @@ deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
 -}
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
-skynet g ai 
-  | M.size (ranks ai) == 0 = skynet g ai {ranks = calRank}
-  | otherwise = ((M.foldrWithKey generateAttack [] ourPs), [], ai)
+skynet g ai
+  | M.null (ranks ai) = skynet g ai {ranks = calRank}
+  | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [outputGameStatus], ai)
   where 
     calRank = planetRank g 
     ourPs = ourPlanets g 
+    outputGameStatus :: String 
+    outputGameStatus 
+      = "dangerous level: " ++ show (drSum * ((\(Turns t) -> t) (turn ai)))
+      where 
+        drSum = sum [ calShips pId | pId <- vertices g]
+
+        calShips :: PlanetId -> Int 
+        calShips id 
+          | ourPlanet p   = s
+          | enemyPlanet p = -s 
+          | otherwise     = 0
+          where 
+            p@(Planet _ (Ships s) _) = lookupPlanet id g
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
@@ -349,16 +373,19 @@ applyParams pId g ai
 
 -- coumpute sum of opponent ships in adjacent vertexs 
 -- and multiply of wieght for all adjacent enemy vertices to attect the vertice
+-- and all incomming enemy fleets amount times the remaning turns
 dangerRating :: PlanetId -> GameState -> Int
 dangerRating pId g 
   = foldl drHelp 0 (edgesFrom g pId)
   where 
 
     drHelp :: Int -> (WormholeId, Wormhole) -> Int
-    drHelp n (_, w) 
-      | enemyPlanet p = n + s * (fromInteger (weight w))
-      | otherwise     = n
+    drHelp n (wId, w) 
+      | enemyPlanet p = n' + s * (fromInteger (weight w))
+      | otherwise     = n'
       where 
+        n' = n + sum [ s * t | f@(Fleet p (Ships s) wId' (Turns t)) <- fs, p == Player2, wId == wId' ]
+        (GameState _ _ fs) = g
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
 
 deriving instance Generic PlanetRank
