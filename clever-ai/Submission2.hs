@@ -65,21 +65,21 @@ enemyPlanet (Planet (Owned Player2) _ _) = True
 enemyPlanet _                            = False
 
 findEnemyPlanet :: GameState -> Maybe PlanetId
-findEnemyPlanet g@(GameState ps _ _)
-  | M.null enemies = Nothing
-  | otherwise      = Just . fst . head . M.toList $ enemies
-  where 
-    enemies = M.filter enemyPlanet ps
+findEnemyPlanet st
+  | null l    = Nothing
+  | otherwise = (Just . fst . head) l
+    where l = M.toList (M.filter enemyPlanet ps)
+          (GameState ps _ _) = st
 
 send :: WormholeId -> Maybe Ships -> GameState -> [Order]
-send wId ms st 
-  | o == Neutral || o /= (Owned Player1) = []
-  | isNothing ms || amount >= totalShips = [(Order wId (Ships totalShips))]
-  | otherwise                            = [(Order wId mShips)]
-  where
-    (Just mShips@(Ships amount)) = ms
-    Wormhole (Source src) _ _ = lookupWormhole wId st
-    planet@(Planet o (Ships totalShips) _) = lookupPlanet src st
+send wId mShips st
+  | owner == Neutral || owner == (Owned Player2) = []
+  | mShips == Nothing            = [Order wId totalShips]
+  | fromJust mShips > totalShips = [Order wId totalShips]
+  | otherwise = [Order wId (fromJust mShips)]
+    where
+      Wormhole (Source src) _ _ = lookupWormhole wId st
+      planet@(Planet owner totalShips _) = lookupPlanet src st
 
 shortestPath :: PlanetId -> PlanetId -> GameState 
              -> Maybe (Path (WormholeId, Wormhole))
@@ -104,20 +104,22 @@ lookupPlanet pId (GameState planets _ _)
   = planets M.! pId
 
 attackFromAll :: PlanetId -> GameState -> [Order]
-attackFromAll targetId gs@(GameState ps ws fs)
-  = concat [ send wId Nothing gs | (wId, w@(Wormhole _ (Target t) _)) <- nextWormholes]
-  where 
-
-    ourPs = M.toList (ourPlanets gs)
-    maybePaths = [ shortestPath pId targetId gs | (pId, p@(Planet _ s _)) <- ourPs]
-    nextWormholes = map (\(Just (Path _ es)) -> last es) (filter (\x -> not (isNothing x)) maybePaths)
+attackFromAll targetId gs
+  = map pathToOrder paths
+    where paths   = map fromJust (filter (\x -> not (isNothing x)) paths')
+          paths'  = map (\x -> shortestPath (fst x) targetId gs) (M.toList planets)
+          planets = ourPlanets gs
+          pathToOrder :: (Path (WormholeId, Wormhole)) -> Order
+          pathToOrder (Path _ es) = Order wid mShip
+            where (wid, wh)          = last es
+                  (Planet _ mShip _) = lookupPlanet (source wh) gs
+          
 
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
 zergRush gs ai
-  | t == Nothing = zergRush gs ai {rushTarget = findEnemyPlanet gs}
-  | o == Player1 = zergRush gs ai {rushTarget = findEnemyPlanet gs}
-  | otherwise    = (attackFromAll tId gs, ["attacking " ++ (show tId)], ai)
+  | t == Nothing || o == Player1 = zergRush gs ai {rushTarget = findEnemyPlanet gs}
+  | otherwise = (attackFromAll tId gs, ["attacking " ++ (show tId)], ai)
   where 
     t = rushTarget ai
     tId = fromJust t
@@ -143,10 +145,8 @@ example1 = [("a","b",1), ("a","c",1), ("a","d",1),
             ("b","a",1), ("c","a",1), ("d","a",1), ("c","d",1)]
 
 initPageRank' :: Map pageId a -> PageRanks pageId
-initPageRank' m 
-  = M.map (\x -> (PageRank (1 / fromIntegral n))) m
-  where 
-    n = M.size m
+initPageRank' m = M.map (\x -> PageRank (1 / fromIntegral n)) m
+  where n = M.size m
 
 nextPageRank :: (Ord pageId, Edge e pageId, Graph g e pageId) => 
   g -> PageRanks pageId -> pageId -> PageRank
@@ -270,18 +270,33 @@ checkPlanetRanks = sum . M.elems
 
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
-planetRankRush g ai
-  | turn ai == 0 = planetRankRush g ai {ranks = calRank}
-  | t == Nothing = case (M.null enemyRanks) of
-                   True  -> ([], ["no ememy or nutral planet found"], ai)
-                   False -> planetRankRush g ai {rushTarget = (Just pId)}
-  | otherwise    = (attackFromAll tId g, ["attacking " ++ (show tId)], ai)
-  where 
-    calRank = planetRank g 
-    enemyRanks = M.filterWithKey (\pId r -> not (ourPlanet (lookupPlanet pId g))) (ranks ai)
-    (pId, r) = M.findMax enemyRanks
-    t = rushTarget ai
-    tId = fromJust t
+planetRankRush gs ai
+  | isFirstTime = (orders, [], ai { planetRanking = Just rank })
+  | isNothing target = ([], ["There is no more planet to conquer!"], ai)
+  | otherwise = (orders, [], ai)
+    where isFirstTime = planetRanking ai == Nothing
+          rank = planetRank gs
+          orders = attackFromAll (fromJust target) gs
+          target = if isFirstTime then getTarget gs rank else getTarget gs (fromJust (planetRanking ai))
+
+getTarget :: GameState -> PlanetRanks -> Maybe PlanetId
+getTarget gs rks
+  | M.null rks = Nothing
+  | owner /= (Owned Player1) = Just pid
+  | otherwise = getTarget gs rks'
+    where (Planet owner _ _) = lookupPlanet pid gs
+          ((pid, _), rks') = deleteAndFindMax rks
+
+deleteAndFindMax :: PlanetRanks -> ((PlanetId, PlanetRank), PlanetRanks)
+deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
+  where allPlanetId = M.keys rks
+        deleteAndFindMax' :: [PlanetId] -> (PlanetId, PlanetRank) -> ((PlanetId, PlanetRank), PlanetRanks)
+        deleteAndFindMax' [] p = (p, M.delete (fst p) rks)
+        deleteAndFindMax' (x:xs) p
+          | r' <= r = deleteAndFindMax' xs p
+          | otherwise = deleteAndFindMax' xs (x, r')
+            where r' = rks M.! x
+                  r  = snd p
 
 {-  
   in the first turn, 
@@ -345,6 +360,46 @@ dangerRaiting pId g
       | otherwise     = n
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
+
+type Gain = Double
+
+computeGain :: GameState -> AIState -> PlanetId -> PlanetId -> [Double] -> (Gain, Log, AIState)
+computeGain gs ai srcpid destpid params
+  | isFirstTime = (gain, ["Gain computed"], ai { planetRanking = Just rank } )
+  | otherwise   = (gain, ["Gain computed"], ai )
+      where isFirstTime = planetRanking ai == Nothing
+            gain = (params !! 0) * pagerank + (params !! 1) * (fromInteger turns) + (params !! 2) * (fromIntegral damaged) + (params !! 3) * (fromIntegral compromised)
+            pagerank :: Double
+            pagerank
+              | planetRanking ai == Nothing = let (PlanetRank res) = rank M.! destpid in res
+              | otherwise = let (PlanetRank res) = (fromJust (planetRanking ai)) M.! destpid in res
+            (Path turns _) = (fromJust (shortestPath srcpid destpid gs))
+            damaged :: Int
+            damaged
+              | destOwner == (Owned Player2) && destShips < srcShips = destShips             --reward here
+              | destOwner == (Owned Player2) && destShips >= srcShips = srcShips - destShips --punishment here
+              | otherwise = 0
+            compromised :: Int
+            compromised
+              | destOwner /= (Owned Player1) && destShips < srcShips = destShips --punishment here
+              | destOwner /= (Owned Player1) && destShips >= srcShips = srcShips - destShips --punishment here
+              | otherwise = 0
+            rank   = planetRank gs
+            target = lookupPlanet destpid gs
+            (Planet destOwner (Ships destShips) destGrowth) = lookupPlanet destpid gs
+            (Planet _ (Ships srcShips) srcGrowth) = lookupPlanet srcpid gs
+
+computeDecision :: GameState -> AIState -> [Double] -> ([Order], Log, AIState)
+computeDecision gs ai params = (order, [], ai { gain = (gain ai) + g })
+  where order = undefined --should return the wormhole corresponding to the attackSrc and attackDest
+        ((g, _, _), attackSrc, attackDest) = maximumBy cmp gains
+        gains = concat [ [ (computeGain gs ai srcpid destpid params, srcpid, destpid) | destpid <- map target (edgesFrom gs srcpid) ] | srcpid <- ourPlanets ]
+        ourPlanets = filter (\x -> ourPlanet (lookupPlanet x gs)) (vertices gs)
+        cmp :: Ord a => (a, b, c) -> (a, b, c) -> Ordering
+        cmp ((g1, _, _), _, _) ((g2, _, _), _, _)
+          | g1 > g2 = GT
+          | g1 < g2 = LT
+          | otherwise = EQ
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
