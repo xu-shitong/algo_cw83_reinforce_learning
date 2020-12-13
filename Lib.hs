@@ -53,7 +53,7 @@ import Control.DeepSeq
 import Data.Coerce (coerce)
 
 import Data.Array
-import Data.List (unfoldr, maximumBy, nub, sortBy, (\\))
+import Data.List (unfoldr, nub, sortBy, (\\))
 import Data.Map (Map)
 import qualified Data.Map as M
 

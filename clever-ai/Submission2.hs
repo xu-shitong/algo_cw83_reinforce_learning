@@ -271,13 +271,13 @@ checkPlanetRanks = sum . M.elems
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
 planetRankRush gs ai
-  | isFirstTime = (orders, [], ai { planetRanking = Just rank })
+  | isFirstTime = (orders, [], ai { ranks = ranking })
   | isNothing target = ([], ["There is no more planet to conquer!"], ai)
   | otherwise = (orders, [], ai)
-    where isFirstTime = planetRanking ai == Nothing
-          rank = planetRank gs
+    where isFirstTime = ranks ai == M.empty
+          ranking = planetRank gs
           orders = attackFromAll (fromJust target) gs
-          target = if isFirstTime then getTarget gs rank else getTarget gs (fromJust (planetRanking ai))
+          target = if isFirstTime then getTarget gs ranking else getTarget gs (ranks ai)
 
 getTarget :: GameState -> PlanetRanks -> Maybe PlanetId
 getTarget gs rks
@@ -310,8 +310,8 @@ deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g ai 
-  | turn ai == 0 = skynet g ai {ranks = calRank}
-  | otherwise = (M.foldrWithKey generateAttack [] ourPs, [], ai)
+  | M.size (ranks ai) == 0 = skynet g ai {ranks = calRank}
+  | otherwise = ((M.foldrWithKey generateAttack [] ourPs), [], ai)
   where 
     calRank = planetRank g 
     ourPs = ourPlanets g 
@@ -322,7 +322,7 @@ skynet g ai
       where 
         totRanks = sum . (map (\(_, _, x) -> x)) $ targets 
         targets = applyParams pId g ai 
-        currDefenceRate = dangerRaiting pId g
+        currDefenceRate = dangerRating pId g
 
         -- +1 here is to prevent divide by 0 error
         totAttack = (fromIntegral s) * ((defensiveLevel ai) * totRanks) / (fromIntegral (currDefenceRate + 1) + totRanks)
@@ -342,15 +342,15 @@ applyParams pId g ai
     adjList = [ ( target w
                 , wId
                 , (\(Planet _ _ (Growth g)) -> g) (lookupPlanet (target w) g)
-                , (ranks ai) M.! (target w) 
+                , (ranks ai) M.! (target w)
                 , fromInteger (weight w) 
-                , dangerRaiting (target w)  g)
+                , dangerRating (target w)  g)
                 | (wId, w) <- edgesFrom g pId ]
 
 -- coumpute sum of opponent ships in adjacent vertexs 
 -- and multiply of wieght for all adjacent enemy vertices to attect the vertice
-dangerRaiting :: PlanetId -> GameState -> Int
-dangerRaiting pId g 
+dangerRating :: PlanetId -> GameState -> Int
+dangerRating pId g 
   = foldl drHelp 0 (edgesFrom g pId)
   where 
 
@@ -360,46 +360,6 @@ dangerRaiting pId g
       | otherwise     = n
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
-
-type Gain = Double
-
-computeGain :: GameState -> AIState -> PlanetId -> PlanetId -> [Double] -> (Gain, Log, AIState)
-computeGain gs ai srcpid destpid params
-  | isFirstTime = (gain, ["Gain computed"], ai { planetRanking = Just rank } )
-  | otherwise   = (gain, ["Gain computed"], ai )
-      where isFirstTime = planetRanking ai == Nothing
-            gain = (params !! 0) * pagerank + (params !! 1) * (fromInteger turns) + (params !! 2) * (fromIntegral damaged) + (params !! 3) * (fromIntegral compromised)
-            pagerank :: Double
-            pagerank
-              | planetRanking ai == Nothing = let (PlanetRank res) = rank M.! destpid in res
-              | otherwise = let (PlanetRank res) = (fromJust (planetRanking ai)) M.! destpid in res
-            (Path turns _) = (fromJust (shortestPath srcpid destpid gs))
-            damaged :: Int
-            damaged
-              | destOwner == (Owned Player2) && destShips < srcShips = destShips             --reward here
-              | destOwner == (Owned Player2) && destShips >= srcShips = srcShips - destShips --punishment here
-              | otherwise = 0
-            compromised :: Int
-            compromised
-              | destOwner /= (Owned Player1) && destShips < srcShips = destShips --punishment here
-              | destOwner /= (Owned Player1) && destShips >= srcShips = srcShips - destShips --punishment here
-              | otherwise = 0
-            rank   = planetRank gs
-            target = lookupPlanet destpid gs
-            (Planet destOwner (Ships destShips) destGrowth) = lookupPlanet destpid gs
-            (Planet _ (Ships srcShips) srcGrowth) = lookupPlanet srcpid gs
-
-computeDecision :: GameState -> AIState -> [Double] -> ([Order], Log, AIState)
-computeDecision gs ai params = (order, [], ai { gain = (gain ai) + g })
-  where order = undefined --should return the wormhole corresponding to the attackSrc and attackDest
-        ((g, _, _), attackSrc, attackDest) = maximumBy cmp gains
-        gains = concat [ [ (computeGain gs ai srcpid destpid params, srcpid, destpid) | destpid <- map target (edgesFrom gs srcpid) ] | srcpid <- ourPlanets ]
-        ourPlanets = filter (\x -> ourPlanet (lookupPlanet x gs)) (vertices gs)
-        cmp :: Ord a => (a, b, c) -> (a, b, c) -> Ordering
-        cmp ((g1, _, _), _, _) ((g2, _, _), _, _)
-          | g1 > g2 = GT
-          | g1 < g2 = LT
-          | otherwise = EQ
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank

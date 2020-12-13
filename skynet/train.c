@@ -29,8 +29,8 @@ param_state_t *generate_random_param() {
 
 void compute_gain(param_state_t *param) {
     for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
-        
-        system("../Main clever-ai clever-ai --strategy1 PlanetRankRush --strategy2 Skeynet");
+        //system(**change the params in ai initial state**)
+        system("../Main clever-ai clever-ai --strategy1 PlanetRankRush --strategy2 Skeynet --headless > out.log");
     }
 }
 
