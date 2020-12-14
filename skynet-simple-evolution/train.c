@@ -39,7 +39,7 @@ void train() {
         array[i] = generate_random_param();
       }
 
-      // 3. choose remaning parameters random again and calculate 
+      // 3. choose remaning parameters randomly again and calculate 
       //    calculate only those new parameters
       for (int i = 0; i < GENERATION_SIZE; i++) {
         compute_gain(array[i]);
@@ -133,7 +133,7 @@ void compute_gain(param_state_t *param) {
     // for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
     //system(**change the params in ai initial state**)
         replace_parameter(param);
-        system("./Main clever-ai clever-ai --seed 47981085-1 --strategy1 PlanetRankRush --strategy2 Skynet --headless");
+        system("./Main clever-ai clever-ai --strategy1 Skynet --strategy2 PlanetRankRush --headless --no-recomp");
         param->gain = read_last_danger_point();
     // }
 }
@@ -194,6 +194,52 @@ void show_fittest(param_state_t **array) {
 }
 
 
-void generate_children(param_state_t *fittest, param_state_t **param_array) {
-  
+bool generate_child(param_state_t **fittest, param_state_t **param_array, int array_size) {
+    param_state_t *param = malloc(sizeof(param_state_t));
+    param->growth_w = 0;
+    param->pagerank_w = 0;
+    param->turns_w = 0;
+    param->danger_w = 0;
+    param->
+    for (int i = 0; fittest[i] != NULL; i++) {
+        param_state_t *temp = fittest[i];
+        param->growth_w += temp->growth_w * temp->gain;
+        param->pagerank_w += temp->pagerank_w * temp->gain;
+        param->turns_w += temp->turns_w * temp->gain;
+        param->danger_w += temp->danger_w * temp->gain;
+        /* risk is currently disabled */
+        //param->risk_w += temp->risk_w * temp->gain;
+    }
+    normalize(param);
+
+    // mutate
+    if (randomInteger(0, 100) < 5) {
+        int choice = randomInteger(0, 4);
+        switch (choice) {
+        case 0:
+            param->aggregate_height_w = cap_to_nonnegative(param->aggregate_height_w + randomDouble(-0.2, 0.2));
+            break;
+        case 1:
+            param->complete_line_w = cap_to_nonnegative(param->complete_line_w + randomDouble(-0.2, 0.2));
+            break;
+        case 2:
+            param->hole_number_w = cap_to_nonnegative(param->hole_number_w + randomDouble(-0.2, 0.2));
+            break;
+        case 3:
+            param->bumpiness_w = cap_to_nonnegative(param->bumpiness_w + randomDouble(-0.2, 0.2));
+            break;
+        }
+    }
+    normalize(param);
+
+    int i = 0;
+    while (param_array[i] != NULL) {
+      i++;
+    }
+    if (i >= array_size) {
+      return true;
+    } else {
+      param_array[i] = param;
+      return false;
+    }
 }
