@@ -53,7 +53,7 @@ initialState = AIState
   , rushTarget = Nothing
   , ranks = M.empty 
   , strategyPoints = M.empty
-  , params = [50.070709, 38.414215, 27.708180, 91.381744, 0.529747]
+  , params = [0.300000, 0.720000, 0.440000, 0.780000, 0.000000]
   }
   
 type Log = [String]
@@ -321,7 +321,7 @@ skynet g ai
     ourPs = ourPlanets g 
     outputGameStatus :: String 
     outputGameStatus 
-      = "#" ++ show (shipSum)
+      = show (shipSum)
       where 
         shipSum = sum [ calShips pId | pId <- vertices g]
 
