@@ -3,7 +3,7 @@
 
 #define GENERATION_SIZE 5
 #define FITTEST_SIZE 2
-#define GAME_ITERATION_COUNT 2
+#define GAME_ITERATION_COUNT 10
 
 /**
  * This struct represents a configuration of parameter and its gain

@@ -53,7 +53,7 @@ initialState = AIState
   , rushTarget = Nothing
   , ranks = M.empty 
   , strategyPoints = M.empty
-  , params = [41.748597, 68.677271, 58.897664, 93.043649, 0.846167]
+  , params = [50.070709, 38.414215, 27.708180, 91.381744, 0.529747]
   }
   
 type Log = [String]
@@ -337,7 +337,7 @@ skynet g ai
     generateAttack pId (Planet _ (Ships s) _) os 
       = [ (Order wId (Ships ((\x -> if x < 0 then 0 else x) . floor $ (totAttack * rank / totRanks)))) | (pId', wId, rank) <- targets ] ++ os
       where 
-        totRanks = sum . (map (\(_, _, x) -> x)) $ targets 
+        totRanks = sum . filter (\x -> x > 0) . (map (\(_, _, x) -> x)) $ targets 
         targets = applyParams pId g ai 
         currDefenceRate = dangerRating pId g
 

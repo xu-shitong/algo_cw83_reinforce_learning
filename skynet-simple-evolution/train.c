@@ -108,8 +108,6 @@ param_state_t *generate_random_param() {
     param->danger_w = randomDouble(0, 100);
     param->offensive_w = randomDouble(0, 1);
     param->gain = 0;
-    printf("using para %lf, %lf, %lf, %lf, %lf",
-          param->growth_w, param->pagerank_w, param->turns_w, param->danger_w, param->offensive_w);
     return param;
 }
 
@@ -184,7 +182,10 @@ void select_fittest(param_state_t **param_array) {
 
 void show_fittest(param_state_t **array) {
   for (int i = FITTEST_SIZE; i < GENERATION_SIZE; i++) {
-    fprintf(summary, "%d ", array[i]->gain);
+    // fprintf(summary, "using para %lf, %lf, %lf, %lf, %lf ",
+    //       array[i]->growth_w, array[i]->pagerank_w, array[i]->turns_w, array[i]->danger_w, array[i]->offensive_w);
+
+    fprintf(summary, "gain %d ", array[i]->gain);
   }
   fprintf(summary, "\n");
 }
