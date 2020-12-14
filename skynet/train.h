@@ -34,8 +34,7 @@ param_state_t **init_param_array();
 param_state_t *generate_random_param();
 void compute_gain(param_state_t *param);
 param_state_t **select_fittest(param_state_t **param_array);
-void generate_children(param_state_t **fittest, param_state_t **param_array);
+param_state_t *generate_children(param_state_t **fittest);
 void replace_parameter(param_state_t *param);
-void generate_children(param_state_t **fittest, param_state_t **param_array);
 
 #endif

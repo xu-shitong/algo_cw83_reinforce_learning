@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <string.h>
+#include <assert.h>
 #include "train.h"
 
 static int _sort_param_array_cmp(const void *a, const void *b);
@@ -14,7 +15,7 @@ static void print_param_array(param_state_t **param_array, int array_size);
 
 void train(char *filename) {
     param_state_t **param_array = init_param_array(GENERATION_SIZE);
-    param_state_t **offspring_array = calloc(FITTEST_SIZE, sizeof(param_state_t *));
+    // param_state_t **offspring_array = calloc(FITTEST_SIZE, sizeof(param_state_t *));
     sort_param_array(param_array, GENERATION_SIZE);
 
     printf("Computing the loss of initial population...\n");
@@ -31,12 +32,15 @@ void train(char *filename) {
     while(count < 1000) {
         for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
             param_state_t **fittest = select_fittest(param_array);
-            generate_children(fittest, offspring_array);
+            param_state_t *child = generate_children(fittest);
+            free(param_array[GENERATION_SIZE - 1]);
+            param_array[GENERATION_SIZE - 1] = child;
             /* delete the worst 30% of the population and add offsprings */
-            for (int i = GENERATION_SIZE - FITTEST_SIZE; i < GENERATION_SIZE; i++) {
-                param_array[i] = offspring_array[i - GENERATION_SIZE + FITTEST_SIZE];
-            }
-            memset(offspring_array, 0, FITTEST_SIZE * sizeof(param_state_t *));
+            // for (int i = GENERATION_SIZE - FITTEST_SIZE; i < GENERATION_SIZE; i++) {
+            //     assert (offspring_array[i - GENERATION_SIZE + FITTEST_SIZE] != NULL);
+            //     param_array[i] = offspring_array[i - GENERATION_SIZE + FITTEST_SIZE];
+            // }
+            // memset(offspring_array, 0, FITTEST_SIZE * sizeof(param_state_t *));
         }
         printf("Computing gain of new parameter vectors...\n");
         for (int i = 0; i < GENERATION_SIZE; i++) {
@@ -44,7 +48,7 @@ void train(char *filename) {
             replace_parameter(param_array[i]);
             compute_gain(param_array[i]);
         }
-        exit(1);
+
         sort_param_array(param_array, GENERATION_SIZE);
 
         double total_loss = 0;
@@ -101,8 +105,9 @@ param_state_t **select_fittest(param_state_t **param_array) {
         sample[i] = param_array[random];
     }
     sort_param_array(sample, sample_size);
-    sample = realloc(sample, 4 * sizeof(param_state_t *));
-    sample[3] = NULL;
+    sample = realloc(sample, 3 * sizeof(param_state_t *));
+    assert (sample != NULL);
+    sample[2] = NULL;
 
     free(used);
     return sample;
@@ -123,7 +128,7 @@ void replace_parameter(param_state_t *param) {
   system(command);
 }
 
-void generate_children(param_state_t **fittest, param_state_t **param_array) {
+param_state_t *generate_children(param_state_t **fittest) {
     param_state_t *param = malloc(sizeof(param_state_t));
     param->growth_w = 0;
     param->pagerank_w = 0;
@@ -163,13 +168,7 @@ void generate_children(param_state_t **fittest, param_state_t **param_array) {
     }
     normalize(param);
 
-    int i = 0;
-    while (param_array[i] != NULL) {
-      i++;
-    }
-    if (i < GENERATION_SIZE) {
-      param_array[i] = param;
-    }
+    return param;
 }
 
 static void normalize(param_state_t *param) {
