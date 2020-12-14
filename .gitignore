@@ -4,3 +4,4 @@ test_results_info.json
 out/
 .vscode/
 skynet/*.o
+train-skynet

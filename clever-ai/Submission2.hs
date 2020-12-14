@@ -53,7 +53,7 @@ initialState = AIState
   , rushTarget = Nothing
   , ranks = M.empty 
   , strategyPoints = M.empty
-  , params = [0.300000, 0.720000, 0.440000, 0.780000, 0.000000]
+  , params = [-0.587414, -0.287583, -0.701781, -0.282390, 0.000001]
   }
   
 type Log = [String]

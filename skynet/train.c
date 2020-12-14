@@ -5,8 +5,6 @@
 #include <string.h>
 #include "train.h"
 
-char *command;
-
 static int _sort_param_array_cmp(const void *a, const void *b);
 static void sort_param_array(param_state_t **param_array, int array_size);
 static void normalize(param_state_t *param);
@@ -18,7 +16,6 @@ void train(char *filename) {
     param_state_t **param_array = init_param_array(GENERATION_SIZE);
     param_state_t **offspring_array = calloc(FITTEST_SIZE, sizeof(param_state_t *));
     sort_param_array(param_array, GENERATION_SIZE);
-    command = malloc(150 * sizeof(char));
 
     printf("Computing the loss of initial population...\n");
     for (int i = 0; i < GENERATION_SIZE; i++) {
@@ -27,12 +24,12 @@ void train(char *filename) {
         printf("Gain successfully computed for param vec %d\n", i);
     }
     sort_param_array(param_array, GENERATION_SIZE);
-    print_param_array(param_array, 5);
+    print_param_array(param_array, GENERATION_SIZE);
     //print_and_save_result(param_array, 1);
 
     int count = 0;
     while(count < 1000) {
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
             param_state_t **fittest = select_fittest(param_array);
             generate_children(fittest, offspring_array);
             /* delete the worst 30% of the population and add offsprings */
@@ -42,10 +39,12 @@ void train(char *filename) {
             memset(offspring_array, 0, FITTEST_SIZE * sizeof(param_state_t *));
         }
         printf("Computing gain of new parameter vectors...\n");
-        for (int i = 0; param_array[i] != NULL; i++) {
+        for (int i = 0; i < GENERATION_SIZE; i++) {
+            // printf("generate i = %d, param_array[i] = %p\n", i, param_array[i]);
             replace_parameter(param_array[i]);
             compute_gain(param_array[i]);
         }
+        exit(1);
         sort_param_array(param_array, GENERATION_SIZE);
 
         double total_loss = 0;
@@ -56,7 +55,6 @@ void train(char *filename) {
         //print_and_save_result(param_array, 1);
         count++;
     }
-    free(command);
 }
 
 param_state_t **init_param_array() {
@@ -103,8 +101,8 @@ param_state_t **select_fittest(param_state_t **param_array) {
         sample[i] = param_array[random];
     }
     sort_param_array(sample, sample_size);
-    sample = realloc(sample, (FITTEST_SIZE + 1) * sizeof(param_state_t *));
-    sample[FITTEST_SIZE] = NULL;
+    sample = realloc(sample, 4 * sizeof(param_state_t *));
+    sample[3] = NULL;
 
     free(used);
     return sample;
@@ -119,6 +117,7 @@ static void sort_param_array(param_state_t **param_array, int array_size) {
 }
 
 void replace_parameter(param_state_t *param) {
+  char command[400];
   sprintf(command, "sed -i ''  '56s/^.*$/  , params = [%lf, %lf, %lf, %lf, %lf]/g' clever-ai/Submission2.hs",
           param->growth_w, param->pagerank_w, param->turns_w, param->danger_w, param->offensive_w);
   system(command);
@@ -163,6 +162,14 @@ void generate_children(param_state_t **fittest, param_state_t **param_array) {
         }
     }
     normalize(param);
+
+    int i = 0;
+    while (param_array[i] != NULL) {
+      i++;
+    }
+    if (i < GENERATION_SIZE) {
+      param_array[i] = param;
+    }
 }
 
 static void normalize(param_state_t *param) {
