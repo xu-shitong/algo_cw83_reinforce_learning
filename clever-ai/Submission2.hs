@@ -45,7 +45,6 @@ data AIState = AIState
   , ranks :: PlanetRanks
   , strategyPoints :: PlanetRanks
   , params :: [Double]
-  , defensiveLevel :: Double
   } deriving Generic
  
 initialState :: AIState
@@ -54,18 +53,9 @@ initialState = AIState
   , rushTarget = Nothing
   , ranks = M.empty 
   , strategyPoints = M.empty
-  , params = [0, 0, 0, 0]
-  , defensiveLevel = 0
+  , params = [41.748597, 68.677271, 58.897664, 93.043649, 0.846167]
   }
-
-readParams :: IO ([Double])
-readParams = do  
-        contents <- readFile "clever-ai/test.txt"
-        return (map readDouble . words $ contents)
-
-readDouble :: String -> Double
-readDouble = read
-
+  
 type Log = [String]
 
 pacifist :: GameState -> AIState -> ([Order], Log, AIState)
@@ -129,9 +119,12 @@ attackFromAll targetId gs
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
 zergRush gs ai
-  | t == Nothing || o == Player1 = zergRush gs ai {rushTarget = findEnemyPlanet gs}
+  | t == Nothing || o == Player1 = case nextEnemy of  
+          Nothing -> ([], [], ai) 
+          _       -> zergRush gs ai {rushTarget = nextEnemy }
   | otherwise = (attackFromAll tId gs, ["attacking " ++ (show tId)], ai)
   where 
+    nextEnemy = findEnemyPlanet gs
     t = rushTarget ai
     tId = fromJust t
     target@(Planet (Owned o) _ _) = lookupPlanet tId gs 
@@ -328,9 +321,9 @@ skynet g ai
     ourPs = ourPlanets g 
     outputGameStatus :: String 
     outputGameStatus 
-      = "dangerous level: " ++ show (drSum * ((\(Turns t) -> t) (turn ai)))
+      = "#" ++ show (shipSum)
       where 
-        drSum = sum [ calShips pId | pId <- vertices g]
+        shipSum = sum [ calShips pId | pId <- vertices g]
 
         calShips :: PlanetId -> Int 
         calShips id 
@@ -342,14 +335,15 @@ skynet g ai
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
-      = [ (Order wId (Ships (round (totAttack / rank)))) | (pId', wId, rank) <- targets ]
+      = [ (Order wId (Ships ((\x -> if x < 0 then 0 else x) . floor $ (totAttack * rank / totRanks)))) | (pId', wId, rank) <- targets ] ++ os
       where 
         totRanks = sum . (map (\(_, _, x) -> x)) $ targets 
         targets = applyParams pId g ai 
         currDefenceRate = dangerRating pId g
 
+        (_ : _ : _ : _ : offensiveLevel : []) = params ai 
         -- +1 here is to prevent divide by 0 error
-        totAttack = (fromIntegral s) * ((defensiveLevel ai) * totRanks) / (fromIntegral (currDefenceRate + 1) + totRanks)
+        totAttack = (fromIntegral s) * (offensiveLevel * totRanks) / (fromIntegral (currDefenceRate + 1) + (offensiveLevel * totRanks))
 
 -- given a planet id, return orders to send ships to neighbours
 applyParams :: PlanetId -> GameState -> AIState -> [(PlanetId, WormholeId, Double)]
@@ -357,11 +351,11 @@ applyParams pId g ai
   = [ (pId,
       wId, 
       pGro * (fromIntegral gro) + 
-      pPr * pr + 
+      pPr * pr -
       pT * t -
       pDr * fromIntegral dr) | (pId, wId, gro, (PlanetRank pr), t, dr) <- adjList]
   where 
-    (pGro : pPr : pT : pDr : []) = params ai 
+    (pGro : pPr : pT : pDr : _) = params ai 
     currP = lookupPlanet pId g 
     adjList = [ ( target w
                 , wId
@@ -376,16 +370,15 @@ applyParams pId g ai
 -- and all incomming enemy fleets amount times the remaning turns
 dangerRating :: PlanetId -> GameState -> Int
 dangerRating pId g 
-  = foldl drHelp 0 (edgesFrom g pId)
+  = foldl drHelp 0 (edgesFrom g pId) + sum [ s * t | f@(Fleet p (Ships s) wId (Turns t)) <- fs, p == Player2, pId == target (lookupWormhole wId g) ]
   where 
+    (GameState _ _ fs) = g
 
     drHelp :: Int -> (WormholeId, Wormhole) -> Int
     drHelp n (wId, w) 
-      | enemyPlanet p = n' + s * (fromInteger (weight w))
-      | otherwise     = n'
+      | enemyPlanet p = n + s * (fromInteger (weight w))
+      | otherwise     = n
       where 
-        n' = n + sum [ s * t | f@(Fleet p (Ships s) wId' (Turns t)) <- fs, p == Player2, wId == wId' ]
-        (GameState _ _ fs) = g
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
 
 deriving instance Generic PlanetRank
