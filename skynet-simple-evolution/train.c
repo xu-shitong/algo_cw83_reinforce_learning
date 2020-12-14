@@ -6,7 +6,7 @@
 char *command;
 FILE *summary;
 
-static double randomDouble(int lower, int upper);
+static double randomDouble(double lower, double upper);
 int read_last_danger_point();
 void evolve_typeA(param_state_t**array, int father_index, int mother_index, int child_index);
 void evolve_typeB(param_state_t**array, int father_index, int mother_index, int child_index);
@@ -41,7 +41,7 @@ void train() {
 
       // 3. choose remaning parameters random again and calculate 
       //    calculate only those new parameters
-      for (int i = FITTEST_SIZE; i < GENERATION_SIZE; i++) {
+      for (int i = 0; i < GENERATION_SIZE; i++) {
         compute_gain(array[i]);
       }
   }
@@ -53,7 +53,7 @@ void train() {
       result = array[i];
     }
   }
-  printf("pGro = %lf, pPr = %lf, pT = %lf, pDr = %lf, offensive = %lf\n", result->growth_w, result->pagerank_w, result->turns_w, result->danger_w, result->offensive_w);
+  printf("pGro = %lf, pPr = %lf, pT = %lf, pDr = %lf, offensive = %lf, gain = %d\n", result->growth_w, result->pagerank_w, result->turns_w, result->danger_w, result->offensive_w, result->gain);
 
   free_array(array);
   free(command);
@@ -106,12 +106,12 @@ param_state_t *generate_random_param() {
     param->pagerank_w = randomDouble(0, 100);
     param->turns_w = randomDouble(0, 100);
     param->danger_w = randomDouble(0, 100);
-    param->offensive_w = randomDouble(0, 1);
+    param->offensive_w = randomDouble(0, 0.5);
     param->gain = 0;
     return param;
 }
 
-static double randomDouble(int lower, int upper) {
+static double randomDouble(double lower, double upper) {
   return ((double) rand()) / RAND_MAX * (upper - lower);
 }
 
@@ -133,7 +133,7 @@ void compute_gain(param_state_t *param) {
     // for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
     //system(**change the params in ai initial state**)
         replace_parameter(param);
-        system("./Main clever-ai clever-ai --strategy1 PlanetRankRush --strategy2 Skynet --headless");
+        system("./Main clever-ai clever-ai --seed 47981085-1 --strategy1 PlanetRankRush --strategy2 Skynet --headless");
         param->gain = read_last_danger_point();
     // }
 }
@@ -181,12 +181,15 @@ void select_fittest(param_state_t **param_array) {
 }
 
 void show_fittest(param_state_t **array) {
+  // int temp = 0;
   for (int i = FITTEST_SIZE; i < GENERATION_SIZE; i++) {
-    // fprintf(summary, "using para %lf, %lf, %lf, %lf, %lf ",
+    // fprintf(summary, "%lf, %lf, %lf, %lf, %lf -> ",
     //       array[i]->growth_w, array[i]->pagerank_w, array[i]->turns_w, array[i]->danger_w, array[i]->offensive_w);
 
-    fprintf(summary, "gain %d ", array[i]->gain);
+    fprintf(summary, "%d ", array[i]->gain);
+    // temp += array[i]->gain;
   }
+  // fprintf(summary, "%d ", temp);
   fprintf(summary, "\n");
 }
 
