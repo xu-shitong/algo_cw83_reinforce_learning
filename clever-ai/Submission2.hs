@@ -53,7 +53,7 @@ initialState = AIState
   , rushTarget = Nothing
   , ranks = M.empty 
   , strategyPoints = M.empty
-  , params = [50.070709, 38.414215, 27.708180, 91.381744, 0.529747]
+  , params = [7, 0, 0.1, 0.1, 50]
   }
   
 type Log = [String]
@@ -313,18 +313,49 @@ deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
 -}
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
+skynet g ai 
+  | M.null (ranks ai) = skynet g ai {ranks = calRank}
+  | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [], ai)
+  where 
+    calRank = planetRank g 
+    ourPs = ourPlanets g 
+
+    generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
+    generateAttack pId (Planet _ (Ships s) _) os 
+      | otherwise = (send wId Nothing g) ++ os
+      where 
+        (wId, _) = maximumBy cmp (edgesFrom g pId)
+
+        cmp :: (WormholeId, Wormhole) -> (WormholeId, Wormhole) -> Ordering
+        cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
+          | ourPlanet p1 = LT
+          | ourPlanet p2 = GT 
+          | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
+          where 
+            pId1 = target w1
+            pId2 = target w2
+            p1@(Planet _ (Ships s1) _) = (lookupPlanet pId1 g)
+            p2@(Planet _ (Ships s2) _) = (lookupPlanet pId2 g)
+
+            t1 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId1)
+            t2 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId2)
+
+{-
 skynet g ai
   | M.null (ranks ai) = skynet g ai {ranks = calRank}
-  | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [outputGameStatus], ai)
+  | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [(show (sum [ s | (Order _ (Ships s)) <- os ]))], ai)
   where 
+    os = (M.foldrWithKey generateAttack [] ourPs)
     calRank = planetRank g 
     ourPs = ourPlanets g 
     outputGameStatus :: String 
     outputGameStatus 
-      = "#" ++ show (shipSum)
+      = "#" ++ show (shipSum + fleetSum)
       where 
         shipSum = sum [ calShips pId | pId <- vertices g]
+        fleetSum = sum [ if p == Player1 then s else -s | f@(Fleet p (Ships s) wId (Turns t)) <- fs ]
 
+        (GameState _ _ fs) = g
         calShips :: PlanetId -> Int 
         calShips id 
           | ourPlanet p   = s
@@ -343,7 +374,7 @@ skynet g ai
 
         (_ : _ : _ : _ : offensiveLevel : []) = params ai 
         -- +1 here is to prevent divide by 0 error
-        totAttack = (fromIntegral s) * (offensiveLevel * totRanks) / (fromIntegral (currDefenceRate + 1) + (offensiveLevel * totRanks))
+        totAttack = ((fromIntegral s) * (offensiveLevel * totRanks)) / (fromIntegral (currDefenceRate + 1) + (offensiveLevel * totRanks))
 
 -- given a planet id, return orders to send ships to neighbours
 applyParams :: PlanetId -> GameState -> AIState -> [(PlanetId, WormholeId, Double)]
@@ -364,6 +395,7 @@ applyParams pId g ai
                 , fromInteger (weight w) 
                 , dangerRating (target w)  g)
                 | (wId, w) <- edgesFrom g pId ]
+-}
 
 -- coumpute sum of opponent ships in adjacent vertexs 
 -- and multiply of wieght for all adjacent enemy vertices to attect the vertice
