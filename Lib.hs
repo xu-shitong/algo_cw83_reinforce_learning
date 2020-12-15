@@ -16,6 +16,7 @@
 
 module Lib
   ( Edge (..)
+  , Weight
   , GameState (..)
   , Graph (..)
   , Growth (..)
@@ -33,10 +34,14 @@ module Lib
   , Fleet (..)
   , Fleets
   , Wormholes
+  , AdjList (..)
+  , Heap (..)
+  , Tree (..)
   , wormholesFrom
   , wormholesTo
   , Wormhole (..)
   , WormholeId (..)
+  , WormholeWithId (..)
   , shortestPaths
   , PQueue (..)
   , lt
@@ -45,6 +50,7 @@ module Lib
   , eq
   , maxBy
   , tabulate
+  , conflictZones
   ) where
 
 import Prelude hiding (maximum)
@@ -53,6 +59,7 @@ import Control.DeepSeq
 import Data.Coerce (coerce)
 
 import Data.Array
+import Data.Maybe
 import Data.List (unfoldr, nub, sortBy, (\\))
 import Data.Map (Map)
 import qualified Data.Map as M
@@ -168,6 +175,83 @@ instance Graph GameState (WormholeId, Wormhole) PlanetId where
   velem pId      (GameState ps _ _) = M.member pId ps
   eelem (wId, _) (GameState _ ws _) = M.member wId ws
 
+data WormholeWithId = WormholeWithId WormholeId Wormhole
+data Heap a = Heap (a -> a -> Ordering) (Tree a)
+data Tree a = Nil | Node Int (Tree a) a (Tree a)
+newtype AdjList e v = AdjList [(v, [e])]
+
+rankTree :: Tree a -> Int
+rankTree Nil            = 0
+rankTree (Node h l x r) = h
+
+node :: Tree a -> a -> Tree a -> Tree a
+node l x r
+  | hl < hr   = Node (hl + 1) r x l
+  | otherwise = Node (hr + 1) l x r
+ where
+  hl = rankTree l
+  hr = rankTree r
+
+mergeHeap :: Heap a -> Heap a -> Heap a
+mergeHeap (Heap cmp l) (Heap _ r) = Heap cmp (mergeTree cmp l r)
+
+mergeTree
+  :: (a -> a -> Ordering) -> Tree a -> Tree a -> Tree a
+mergeTree cmp Nil r = r
+mergeTree cmp l Nil = l
+mergeTree cmp left@(Node _ l lx r) right@(Node _ _ rx _)
+  | lte cmp lx rx = node l lx (mergeTree cmp r right)
+  | otherwise     = mergeTree cmp right left
+
+instance PQueue Heap where
+  priority :: Heap a -> (a -> a -> Ordering)
+  priority (Heap cmp t) = cmp
+
+  empty :: (a -> a -> Ordering) -> Heap a
+  empty cmp = Heap cmp Nil
+
+  isEmpty :: Heap a -> Bool
+  isEmpty (Heap _ Nil) = True
+  isEmpty _ = False
+
+  insert :: a -> Heap a -> Heap a
+  insert val h@(Heap cmp _) = mergeHeap (Heap cmp (node Nil val Nil)) h
+
+  extract :: Heap a -> a
+  extract (Heap _ (Node _ _ x _)) = x
+  extract _ = error "extract: empty heap!"
+
+  discard :: Heap a -> Heap a
+  discard h@(Heap cmp (Node _ l _ r)) = mergeHeap (Heap cmp l) (Heap cmp r)
+  discard _ = error "discard: empty heap!"
+
+instance Edge WormholeWithId PlanetId where
+  source (WormholeWithId _ w) = source w
+  target (WormholeWithId _ w) = target w
+  weight (WormholeWithId _ w) = weight w
+
+instance Eq WormholeWithId where
+  (==) (WormholeWithId id1 _) (WormholeWithId id2 _) = id1 == id2
+
+instance (Eq e, Edge e v) => Graph (AdjList e v) e v where
+  vertices :: (AdjList e v) -> [v]
+  vertices (AdjList ves)    = map fst ves
+
+  edges :: (AdjList e v) -> [e]
+  edges (AdjList ves)       = concat (map snd ves)
+
+  edgesFrom :: (AdjList e v) -> v -> [e]
+  edgesFrom (AdjList ves) s = fromJust (lookup s ves)
+
+  edgesTo :: (AdjList e v) -> v -> [e]
+  edgesTo g t               = filter (\x -> target x == t) (edges g)
+
+  velem :: v -> (AdjList e v) -> Bool
+  velem v g                 = elem v (vertices g)
+
+  eelem :: e -> (AdjList e v) -> Bool
+  eelem e g                 = elem e (edges g)
+
 lt :: (a -> a -> Ordering) -> (a -> a -> Bool)
 lt cmp x y = cmp x y == LT
 
@@ -249,6 +333,36 @@ dijkstra g us ps
   where
     (p, ps') = detach ps
     t = target p
+
+shortestPaths' :: forall g e v . Graph g e v => g -> v -> [Path e]
+shortestPaths' g v = dijkstra g (vertices g \\ [v]) ps
+  where
+    ps :: Heap (Path e)
+    ps = foldr Lib.insert (empty cmpPath) (map pathFromEdge (edgesFrom g v))
+
+conflictZones :: GameState -> PlanetId -> PlanetId
+  -> ([PlanetId], [PlanetId], [PlanetId])
+conflictZones st p q = conflictZones' vs pReachPair qReachPair
+  where
+    pvs = map fst pReachPair
+    qvs = map fst qReachPair
+    pReachPair = [ (target (head es), l) | (Path l es) <- shortestPaths' (AdjList ves) p ]
+    qReachPair = [ (target (head es), l) | (Path l es) <- shortestPaths' (AdjList ves) q ]
+    ves       = zip vs [ map (\(id, wh) -> WormholeWithId id wh) (edgesFrom st v) | v <- vs ]
+    vs        = vertices st
+
+    conflictZones' :: [PlanetId] -> [(PlanetId, Weight)] -> [(PlanetId, Weight)] -> ([PlanetId], [PlanetId], [PlanetId])
+    conflictZones' [] _ _  = ([], [], [])
+    conflictZones' (x:xs) plist qlist
+      | not (elem x pvs || elem x qvs) = res
+      | not (elem x pvs)               = (ps, x:qs, pqs)
+      | not (elem x qvs)               = (x:ps, qs, pqs)
+      | pw < qw   = (x:ps, qs, pqs)
+      | pw > qw   = (ps, x:qs, pqs)
+      | otherwise = (ps, qs, x:pqs)
+        where pw = fromJust (lookup x plist)
+              qw = fromJust (lookup x qlist)
+              res@(ps, qs, pqs) = conflictZones' xs plist qlist
 
 deriving instance Eq Player
 deriving instance Show Player
