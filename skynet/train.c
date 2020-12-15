@@ -92,6 +92,7 @@ void compute_gain(param_state_t *param) {
         param->gain = atoi(path);
         printf("path = %s, gain = %d\n", path, param->gain);
         printf("The gain of this parameter is %d\n", param->gain);
+        pclose(fp);
     }
 }
 
@@ -199,8 +200,8 @@ static double cap_to_nonnegative(double n) {
 }
 
 static void print_param(const param_state_t *param) {
-    printf("param_state_t(growth_w=%f, pagerank_w=%f, turns_w=%f, danger_w=%f, gain=%d)\n",
-            param->growth_w, param->pagerank_w, param->turns_w, param->danger_w, param->gain);
+    printf("param_state_t(growth_w=%f, pagerank_w=%f, turns_w=%f, danger_w=%f, offensive_w=%f gain=%d)\n",
+            param->growth_w, param->pagerank_w, param->turns_w, param->danger_w, param->offensive_w, param->gain);
 }
 
 static void print_param_array(param_state_t **param_array, int array_size) {
