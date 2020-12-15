@@ -1,8 +1,8 @@
 #ifndef SKYNET_TRAIN_H
 #define SKYNET_TRAIN_H
 
-#define GENERATION_SIZE 100
-#define FITTEST_SIZE 30
+#define GENERATION_SIZE 50
+#define FITTEST_SIZE 15
 #define GAME_ITERATION_COUNT 10
 
 #define randomInteger(min, max)  (rand() % (max - min) + min)
@@ -18,7 +18,6 @@ typedef struct {
     double pagerank_w;
     double turns_w;
     double danger_w;
-    double offensive_w;
     /* gain is defined as how many ships are left at the end of the game */
     int gain;
 } param_state_t;

@@ -1,8 +1,8 @@
 CC = gcc 
 BUILD = skynet
 IncludePath = $(PWD)
-CFLAGS = -Wall -g -D_DEFAULT_SOURCE -std=c99 -pedantic $(IncludePath) -fsanitize=address -fopenmp
-LDFLAGS = -lm -fsanitize=address -fopenmp
+CFLAGS = -Wall -g -D_DEFAULT_SOURCE -std=c99 -pedantic $(IncludePath) -fsanitize=address
+LDFLAGS = -lm -fsanitize=address
 
 all : $(BUILD)
 	mv skynet train-skynet

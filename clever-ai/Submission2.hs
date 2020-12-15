@@ -43,7 +43,7 @@ data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
   , ranks :: PlanetRanks
-  , strategyPoints :: PlanetRanks
+  , dangerRates :: Map PlanetId Double
   , params :: [Double]
   } deriving Generic
  
@@ -52,8 +52,8 @@ initialState = AIState
   { turn = 0
   , rushTarget = Nothing
   , ranks = M.empty 
-  , strategyPoints = M.empty
-  , params = [0.800000, 0.790000, 0.032000, 0.074000, -0.000002]
+  , dangerRates = M.empty
+  , params = [0.893943, 0.440167, 0.082606, 0.017174]
   }
   
 type Log = [String]
@@ -311,7 +311,7 @@ deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
     (todo) parameters for each factor :: [Double]
   store in aistate
 -}
-{-
+
 
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
@@ -326,7 +326,7 @@ skynet g ai
     generateAttack pId (Planet _ (Ships s) _) os 
       | otherwise = (send wId Nothing g) ++ os
       where 
-        (wId, _) = maximumBy cmp ((filter (\() -> )) (edgesFrom g pId))
+        (wId, _) = maximumBy cmp (edgesFrom g pId)
 
         cmp :: (WormholeId, Wormhole) -> (WormholeId, Wormhole) -> Ordering
         cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
@@ -341,16 +341,63 @@ skynet g ai
 
             t1 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId1)
             t2 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId2)
--}
+
+{-
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g ai
   | M.null (ranks ai) = skynet g ai {ranks = calRank}
-  | otherwise         = (os, [outputGameStatus], ai)
+  | otherwise         = (os, [outputGameStatus], ai')
   where 
+    ai' = ai {dangerRates = calDangerRate initDanger} 
+
     os = (M.foldrWithKey generateAttack [] ourPs)
     calRank = planetRank g 
     ourPs = ourPlanets g 
+
+    -- map of planetId and enemy ships on it
+    initDanger :: Map PlanetId Double 
+    initDanger 
+      = M.fromList [ (pId, fromIntegral . shipsOnPlanet $ (lookupPlanet pId g)) | pId <- vertices g ]
+      where 
+        shipsOnPlanet (Planet (Owned player) (Ships s) _)
+          | player == Player1 = -s 
+          | player == Player2 = s 
+        shipsOnPlanet _ 
+          = 0 
+
+    -- modify initdanger by adding all incoming enemy fleet
+    calDangerRate :: Map PlanetId Double -> Map PlanetId Double
+    calDangerRate preMap
+      = foldr drHelp preMap attackingList
+      where 
+        (GameState _ _ fs ) = g
+        drHelp :: (PlanetId, Double) -> Map PlanetId Double -> Map PlanetId Double 
+        drHelp (pId, val) m
+          = M.alter update pId m
+          where 
+            update :: Maybe Double -> Maybe Double 
+            update (Just oldVal)
+              = (Just (oldVal + val))
+            update Nothing 
+              = (Just val)
+
+        attackingList :: [(PlanetId, Double)]
+        attackingList = [ (target (lookupWormhole wId g) , fromIntegral s / (fromIntegral t)) | f@(Fleet p (Ships s) wId (Turns t)) <- fs, p == Player2 ]
+
+      
+    {-
+    strategyMap = M.fromList [ (pId, dijCalStrategy pId) | pId <- vertices g]
+
+    dijCalStrategy :: PlanetId -> Map PlanetId Int
+    dijCalStrategy pId 
+      = M.fromList [ ((\(Path _ es) -> (\(_, w) -> target w) (last es)) . head $ paths , fromInteger . sum $ [ w | p@((Path w _)) <- paths]) | paths <- firstMove ]
+      where 
+        ps = shortestPaths g pId 
+        firstMove = groupBy (\(Path _ es1) (Path _ es2) -> (target . last $ es1) == (target . last $ es2)) ps
+    -} 
+
+
     outputGameStatus :: String 
     outputGameStatus 
       = show (shipSum + fleetSum)
@@ -369,35 +416,31 @@ skynet g ai
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
-      = [ (Order wId (Ships ((\x -> if x < 0 then 0 else x) . floor $ (totAttack * rank / totRanks)))) | (pId', wId, rank) <- targets ] ++ os
+      | s < 10    = os 
+      | otherwise = [ (Order wId (Ships (floor $ (totAttack * rank / totRanks)))) | (wId, rank) <- targets, rank > 0 ] ++ os
       where 
-        totRanks = sum . filter (\x -> x > 0) . (map (\(_, _, x) -> x)) $ targets 
-        targets = applyParams pId g ai 
-        currDefenceRate = dangerRating pId g
+        totRanks = sum . filter (\x -> x > 0) . (map snd) $ targets 
+        targets = applyParams pId g ai'
 
-        (_ : _ : _ : _ : offensiveLevel : []) = params ai 
         -- +1 here is to prevent divide by 0 error
---        totAttack = ((fromIntegral s) * (offensiveLevel * totRanks)) / (fromIntegral (currDefenceRate + 1) + (offensiveLevel * totRanks))
-        totAttack = (fromIntegral s) 
+        totAttack = (fromIntegral s) - 10
 
 -- given a planet id, return orders to send ships to neighbours
-applyParams :: PlanetId -> GameState -> AIState -> [(PlanetId, WormholeId, Double)]
+applyParams :: PlanetId -> GameState -> AIState -> [(WormholeId, Double)]
 applyParams pId g ai 
-  = [ (pId,
-      wId, 
+  = [(wId, 
       pGro * (fromIntegral gro) + 
       pPr * pr -
       pT * t -
-      pDr * fromIntegral dr) | (pId, wId, gro, (PlanetRank pr), t, dr) <- adjList]
+      pDr * dr) | (wId, gro, (PlanetRank pr), t, dr) <- adjList]
   where 
     (pGro : pPr : pT : pDr : _) = params ai 
     currP = lookupPlanet pId g 
-    adjList = [ ( target w
-                , wId
+    adjList = [ ( wId
                 , (\(Planet _ _ (Growth g)) -> g) (lookupPlanet (target w) g)
                 , (ranks ai) M.! (target w)
                 , fromInteger (weight w) 
-                , dangerRating (target w)  g)
+                , dangerRates ai M.! (target w))
                 | (wId, w) <- edgesFrom g pId ]
 
 
@@ -406,9 +449,8 @@ applyParams pId g ai
 -- and all incomming enemy fleets amount times the remaning turns
 dangerRating :: PlanetId -> GameState -> Int
 dangerRating pId g 
-  = foldl drHelp 0 (edgesFrom g pId) + sum [ s * t | f@(Fleet p (Ships s) wId (Turns t)) <- fs, p == Player2, pId == target (lookupWormhole wId g) ]
+  = foldl drHelp 0 (edgesFrom g pId) 
   where 
-    (GameState _ _ fs) = g
 
     drHelp :: Int -> (WormholeId, Wormhole) -> Int
     drHelp n (wId, w) 
@@ -416,7 +458,7 @@ dangerRating pId g
       | otherwise     = n
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
-
+-}
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
  

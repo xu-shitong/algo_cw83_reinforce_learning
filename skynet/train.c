@@ -32,8 +32,8 @@ void train(char *filename) {
     //print_and_save_result(param_array, 1);
 
     int count = 0;
-    while(count < 1000) {
-        for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
+    while(count < 10) {
+        // for (int i = 0; i < GAME_ITERATION_COUNT; i++) {
             param_state_t **fittest = select_fittest(param_array);
             generate_children(fittest, offspring_array);
             free(fittest);
@@ -45,7 +45,7 @@ void train(char *filename) {
                  param_array[i] = offspring_array[i - GENERATION_SIZE + FITTEST_SIZE];
             }
             memset(offspring_array, 0, FITTEST_SIZE * sizeof(param_state_t *));
-        }
+        // }
         printf("Computing gain of new parameter vectors...\n");
         for (int i = 0; i < GENERATION_SIZE; i++) {
             // printf("generate i = %d, param_array[i] = %p\n", i, param_array[i]);
@@ -77,8 +77,8 @@ param_state_t **init_param_array() {
 
 param_state_t *generate_random_param() {
     param_state_t *param = malloc(sizeof(param_state_t));
-    param->growth_w = randomDouble(0, 1);
-    param->pagerank_w = randomDouble(0, 1);
+    param->growth_w = randomDouble(0, 10);
+    param->pagerank_w = randomDouble(0, 10);
     param->turns_w = randomDouble(0, 1);
     param->danger_w = randomDouble(0, 1);
     param->gain = 0;
@@ -94,6 +94,7 @@ void compute_gain(param_state_t *param) {
         system("./Main clever-ai clever-ai --strategy1 Skynet --strategy2 PlanetRankRush --headless --no-recomp > /dev/null");
         fp = popen("/usr/bin/tail -n2 ./out/log1.txt", "r");
         fgets(path, sizeof(path), fp);
+        printf("path is %s ", path);
         param->gain += atoi(path);
         printf("The gain of this parameter is %d\n", param->gain);
 	pclose(fp);
@@ -133,8 +134,8 @@ static void sort_param_array(param_state_t **param_array, int array_size) {
 
 void replace_parameter(param_state_t *param) {
   char command[400];
-  sprintf(command, "sed -i '56s/^.*$/  , params = [%lf, %lf, %lf, %lf, %lf]/g' clever-ai/Submission2.hs",
-          param->growth_w, param->pagerank_w, param->turns_w, param->danger_w, param->offensive_w);
+  sprintf(command, "sed -i '' '56s/^.*$/  , params = [%lf, %lf, %lf, %lf]/g' clever-ai/Submission2.hs",
+          param->growth_w, param->pagerank_w, param->turns_w, param->danger_w);
   system(command);
 }
 
@@ -159,12 +160,12 @@ void generate_children(param_state_t **fittest, param_state_t **children) {
         param->pagerank_w = choice1->pagerank_w * choice1->gain + choice2->pagerank_w * choice2->gain;
         param->turns_w = choice1->turns_w * choice1->gain + choice2->turns_w * choice2->gain;
         param->danger_w = choice1->danger_w * choice1->gain + choice2->danger_w * choice2->gain;
-        param->offensive_w = choice1->offensive_w * choice1->gain + choice2->offensive_w * choice2->gain;
+        // param->offensive_w = choice1->offensive_w * choice1->gain + choice2->offensive_w * choice2->gain;
         normalize(param);
 
     // mutate
     if (randomInteger(0, 100) < 5) {
-        int choice = randomInteger(0, 5);
+        int choice = randomInteger(0, 4);
         switch (choice) {
         case 0:
             param->growth_w = cap_to_nonnegative(param->growth_w + randomDouble(-0.2, 0.2));
@@ -178,8 +179,8 @@ void generate_children(param_state_t **fittest, param_state_t **children) {
         case 3:
             param->danger_w = cap_to_nonnegative(param->danger_w + randomDouble(-0.2, 0.2));
             break;
-        case 4:
-            param->offensive_w = cap_to_nonnegative(param->danger_w + randomDouble(-0.2, 0.2));
+        // case 4:
+        //     param->offensive_w = cap_to_nonnegative(param->danger_w + randomDouble(-0.2, 0.2));
             break;
         }
     }
@@ -199,15 +200,15 @@ static void normalize(param_state_t *param) {
   nw *= nw;
   register double bw = param->danger_w;
   bw *= bw;
-  register double ow = param->offensive_w;
-  ow *= ow;
-  double magnitude = sqrt(hw + lw + nw + bw + ow);
+  // register double ow = param->offensive_w;
+  // ow *= ow;
+  double magnitude = sqrt(hw + lw + nw + bw);
 
   param->growth_w /= magnitude;
   param->pagerank_w /= magnitude;
   param->turns_w /= magnitude;
   param->danger_w /= magnitude;
-  param->offensive_w /= magnitude;
+  // param->offensive_w /= magnitude;
 }
 
 static double cap_to_nonnegative(double n) {
