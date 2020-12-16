@@ -336,7 +336,7 @@ skynet g@(GameState ps ws fs) ai
             let wormholeIds = concatMap (\tId -> M.keys (M.filter (\(Wormhole s t _) -> (s == Source pId) && (t == Target tId)) ws)) bkTargetPlanetIds in
               zip wormholeIds shipsToSend
           else
-            let nPlanetsToConquer = 5 in
+            let nPlanetsToConquer = max 1 (div totalShips 200) in
             let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (edgesFrom g pId))) in
             let size = length wormholeIds in
             let shipsToSend = replicate size (Ships (div s (size))) in -- TODO 
@@ -350,8 +350,8 @@ skynet g@(GameState ps ws fs) ai
         cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
           | ourPlanet p1 = LT
           | ourPlanet p2 = GT 
-          -- | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2))
-          | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
+          | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1 * dr1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2 * dr2))
+          -- | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
 
           -- | otherwise    = compare t1 t2
           where 
@@ -363,11 +363,28 @@ skynet g@(GameState ps ws fs) ai
             t1 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId1)
             t2 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId2)
 
+            dr1 = dangerRating pId1 g
+            dr2 = dangerRating pId2 g
+
 turnsToTake :: PlanetId -> PlanetId -> Turns
 turnsToTake srcpid destpid = undefined
 
 dangerPoint :: GameState -> Int
 dangerPoint gs = undefined
+
+-- coumpute sum of opponent ships in adjacent vertexs 
+-- and multiply of wieght for all adjacent enemy vertices to attect the vertice
+-- and all incomming enemy fleets amount times the remaning turns
+dangerRating :: PlanetId -> GameState -> Int
+dangerRating pId g 
+  = foldl drHelp 0 (edgesFrom g pId) 
+  where
+    drHelp :: Int -> (WormholeId, Wormhole) -> Int
+    drHelp n (wId, w) 
+      | enemyPlanet p = n + s * (fromInteger (weight w))
+      | otherwise     = n
+      where 
+        p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
 
 cost :: PlanetId -> Ships
 cost targetpid = undefined

@@ -370,7 +370,7 @@ bknapsack'' wvs c = table ! (length wvs, c)
 
 optimise :: GameState -> Source -> (Growth, [PlanetId])
 optimise st s@(Source p)
-  = bknapsack'' (targetPlanets st s) (shipsOnPlanet st p)
+  = bknapsack'' (filter (\(pId, _, _) -> let (Planet owner _ _) = lookupPlanet pId st in owner /= Owned Player1) (targetPlanets st s)) ((shipsOnPlanet st p))
 
 shortestPaths' :: forall g e v . Graph g e v => g -> v -> [Path e]
 shortestPaths' g v = dijkstra g (vertices g \\ [v]) ps
