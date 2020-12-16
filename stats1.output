@@ -1,0 +1,1115 @@
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 907037423-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1362097464-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1012104168-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1076495304-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 778176309-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 867553050-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 2120628708-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 560489698-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1469998776-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 489465068-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1358059172-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 725629306-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 484868585-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1169294029-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1657649591-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 780923961-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 694208648-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 966446641-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1476598229-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 29427400-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 2096978163-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 489779579-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 529304400-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 321340461-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 259458543-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1592502700-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 608330466-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1672594170-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1576106646-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 410688173-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1607753380-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 799460247-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 2098930058-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1849247553-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 517023796-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 880154679-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 637273438-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1206316040-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1002966037-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 510027709-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1827838231-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 982847423-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1709544616-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1475249654-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1734279957-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 638933635-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1699934174-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 633184608-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1900434233-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1950795649-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1051209100-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 74286514-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 755045235-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1175919701-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1696976838-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1306459486-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1265226927-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 529725520-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1373367527-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1390440852-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1185421937-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1974457134-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1265798748-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1540926088-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1302300699-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1267828973-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1149905002-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1276069478-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1942942452-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 612494788-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1253271716-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1246193393-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1241793561-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1979475369-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1211375264-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 379887241-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 365003280-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1184021351-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1769557128-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1537661031-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1159783481-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1185982051-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 465378734-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 135425761-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1439100233-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1606520493-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1217134057-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1493850183-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1674655778-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 106127649-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1757495659-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 333200706-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1289604227-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1319123356-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1203710773-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1871807741-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1454410523-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1385998867-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1172145891-1
+Player 2 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1628746374-1
+Draw
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player2 ...
+Running in headless mode...
+Seed: 1001257117-1
+Player 1 won
+[1 of 3] Compiling Lib              ( Lib.hs, .tmp/clever-ai/Lib.o )
+[2 of 3] Compiling Submission2      ( clever-ai/Submission2.hs, .tmp/clever-ai/Submission2.o )
+[3 of 3] Compiling Main             ( clever-ai/AI.hs, .tmp/clever-ai/Main.o )
+Linking .tmp/Player1 ...
