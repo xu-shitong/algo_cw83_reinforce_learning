@@ -329,14 +329,14 @@ skynet g@(GameState ps ws fs) ai
        = (concatMap (\(wId, nShips) -> (send wId (Just nShips) g)) departures) ++ os -- ( if totalShips < 300 then Nothing else (Just (Ships (s - (div totalShips totalPlanets)))))
       where 
         departures =
-          if totalShips < 700 then
+          if totalShips < 300 then
             let gameStateToOptimize = GameState (M.map (\p@(Planet owner ships growth) -> if owner == Owned Player1 then p else Planet owner (ships + 1) growth) ps) ws fs in
             let bkTargetPlanetIds = snd (optimise gameStateToOptimize (Source pId)) in
             let shipsToSend = map (\pId -> let (Planet _ nShips _) = lookupPlanet pId gameStateToOptimize in nShips ) bkTargetPlanetIds in
             let wormholeIds = concatMap (\tId -> M.keys (M.filter (\(Wormhole s t _) -> (s == Source pId) && (t == Target tId)) ws)) bkTargetPlanetIds in
               zip wormholeIds shipsToSend
           else
-            let nPlanetsToConquer = max 1 (div totalShips 200) in
+            let nPlanetsToConquer = max 1 (div totalShips 150) in
             let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (edgesFrom g pId))) in
             let size = length wormholeIds in
             let shipsToSend = replicate size (Ships (div s (size))) in -- TODO 
