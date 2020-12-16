@@ -51,6 +51,7 @@ module Lib
   , maxBy
   , tabulate
   , conflictZones
+  , optimise
   ) where
 
 import Prelude hiding (maximum)
@@ -333,6 +334,43 @@ dijkstra g us ps
   where
     (p, ps') = detach ps
     t = target p
+
+lookupPlanet :: PlanetId -> GameState -> Planet
+lookupPlanet pId (GameState ps _ _) = fromJust (M.lookup pId ps)
+
+targetPlanets :: GameState -> Source -> [(PlanetId, Ships, Growth)]
+targetPlanets st s
+  = map (planetDetails . target) (M.elems (wormholesFrom s st))
+    where
+      planetDetails :: PlanetId -> (PlanetId, Ships, Growth)
+      planetDetails pId = (pId, ships, growth)
+        where Planet _ ships growth = lookupPlanet pId st
+
+shipsOnPlanet :: GameState -> PlanetId -> Ships
+shipsOnPlanet st pId = ships
+  where Planet _ ships _ = lookupPlanet pId st
+
+bknapsack'' :: forall name weight value .
+  (Ord name, Ix weight, Ord weight, Num weight, 
+    Ord value, Num value) =>
+  [(name, weight, value)] -> weight -> (value, [name])
+bknapsack'' wvs c = table ! (length wvs, c)
+  where table :: Array (Int, weight) (value, [name])
+        table = tabulate ((0, 0), (length wvs, c)) mbknapsack
+
+        mbknapsack :: (Int, weight) -> (value, [name])
+        mbknapsack (i, c)
+          | i == 0    = (0, [])
+          | c - w >= 0 = maxBy fst excluded included
+          | otherwise = excluded
+            where excluded   = table ! (i-1, c)
+                  included   = (v + maxV, n : ns)
+                  (n,w,v)    = wvs !! (i-1)
+                  (maxV, ns) = table ! (i-1, c-w)
+
+optimise :: GameState -> Source -> (Growth, [PlanetId])
+optimise st s@(Source p)
+  = bknapsack'' (targetPlanets st s) (shipsOnPlanet st p)
 
 shortestPaths' :: forall g e v . Graph g e v => g -> v -> [Path e]
 shortestPaths' g v = dijkstra g (vertices g \\ [v]) ps

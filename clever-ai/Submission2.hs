@@ -313,20 +313,37 @@ Things to consider:
  - knapsack: Using knapsack algorithm before any clashes happen
 How to devide ships:
  - if danger is high, then move all the ships to a safer place, or if it is possible, try to conquer one of their planets
- - 
 -}
 
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
-skynet g ai
-  | M.null (ranks ai) = skynet g ai {ranks = calRank}
-  | otherwise         = (skynetAttack, [], ai)
-    where
-      calRank = planetRank g
-      ourPs = ourPlanets g
-      skynetAttack :: PlanetId -> [Order]
-      skynetAttack ourpid
-        where 
+skynet gs ai = ([], [], ai)
+  -- | M.null (ranks ai) = skynet gs ai {ranks = calRank}
+  -- | otherwise         = (concat (map skynetAttack ourPs), [], ai)
+  --   where
+  --     calRank = planetRank g
+  --     ourPs = filter (\x -> ourPlanet (lookupPlanet x gs)) (vertices gs)
+  --     skynetAttack :: PlanetId -> [Order]
+  --     skynetAttack ourpid
+  --       where 
+
+turnsToTake :: PlanetId -> PlanetId -> Turns
+turnsToTake srcpid destpid = undefined
+
+dangerPoint :: GameState -> Int
+dangerPoint gs = undefined
+
+cost :: PlanetId -> Ships
+cost targetpid = undefined
+
+pagerank :: GameState -> AIState -> PlanetRank
+pagerank gs ai = undefined
+
+fleet :: GameState -> PlanetId -> Int
+fleet gs pid = undefined
+
+choose :: GameState -> PlanetId -> (Growth, [PlanetId])
+choose gs srcpid = undefined
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
