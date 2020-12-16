@@ -354,7 +354,7 @@ skynet g@(GameState ps ws fs) ai
             let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (filter (\(_, Wormhole _ (Target tId) _) -> canReachOpponentPlanet tId (lookupPlanet tId g) g) (edgesFrom g pId)))) in
             let size = length wormholeIds in
             let totalWeight = sum (map (\x -> 1 / (fromIntegral x :: Float)) (take (size + 1) [1..])) in
-            let shipsToSend = take size (map (\x -> (Ships (floor ((fromIntegral s :: Float) / totalWeight / (fromIntegral x :: Float))))) [1..])  in -- TODO 
+            let shipsToSend = take size (map (\x -> (Ships (floor ((fromIntegral s :: Float) / totalWeight / (fromIntegral x :: Float))))) [1..]) in
               zip wormholeIds shipsToSend
 
         totalShips = sum (M.map (\(Planet _ (Ships x) _) -> x) ourPs)
@@ -381,12 +381,6 @@ skynet g@(GameState ps ws fs) ai
             dr1 = dangerRating pId1 g
             dr2 = dangerRating pId2 g
 
-turnsToTake :: PlanetId -> PlanetId -> Turns
-turnsToTake srcpid destpid = undefined
-
-dangerPoint :: GameState -> Int
-dangerPoint gs = undefined
-
 -- coumpute sum of opponent ships in adjacent vertexs 
 -- and multiply of wieght for all adjacent enemy vertices to attect the vertice
 -- and all incomming enemy fleets amount times the remaning turns
@@ -400,18 +394,6 @@ dangerRating pId g
       | otherwise     = n
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
-
-cost :: PlanetId -> Ships
-cost targetpid = undefined
-
-pagerank :: GameState -> AIState -> PlanetRank
-pagerank gs ai = undefined
-
-fleet :: GameState -> PlanetId -> Int
-fleet gs pid = undefined
-
-choose :: GameState -> PlanetId -> (Growth, [PlanetId])
-choose gs srcpid = undefined
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
