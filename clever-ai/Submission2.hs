@@ -1,5 +1,7 @@
 
 {-#  LANGUAGE GeneralizedNewtypeDeriving  #-}
+{-#  LANGUAGE FlexibleInstances  #-}
+{-#  LANGUAGE ScopedTypeVariables  #-}
 {-#  LANGUAGE StandaloneDeriving  #-}
 {-#  LANGUAGE DeriveGeneric  #-}
 
@@ -301,19 +303,21 @@ deleteAndFindMax rks = deleteAndFindMax' allPlanetId (-1, 0)
           | otherwise = deleteAndFindMax' xs (x, r')
             where r' = rks M.! x
                   r  = snd p
-
-{-  
-  in the first turn, 
-  calculate:
-    the overall importance of each planet :: planetRanks
-    all planet's rank :: planetRanks
-  predefine: 
-    (todo) parameters for each factor :: [Double]
-  store in aistate
+{-
+Things to consider:
+ - turns: Number of turns to take to get to the neighbor planets
+ - danger: The danger of being attacked by opponent: so that we need to leave as soon as possible
+ - cost: The number of ships need to be compromised to conquer the planet: so that we do not choose that planet if too many sacrifices
+ - pagerank: The pagerank of that planet
+ - fleet: The opponent's fleet position related to this planet: if there is one opponent fleet that is currently flying to it, then try to avoid the clash
+ - knapsack: Using knapsack algorithm before any clashes happen
+How to devide ships:
+ - if danger is high, then move all the ships to a safer place, or if it is possible, try to conquer one of their planets
 -}
+
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
-skynet g ai 
+skynet g@(GameState ps ws fs) ai 
   | M.null (ranks ai) = skynet g ai {ranks = calRank}
   | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [], ai)
   where 
@@ -322,18 +326,33 @@ skynet g ai
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
-       = (concatMap (\wId -> (send wId (Just (Ships (div s (planetsToConquer + 1)))) g)) wIds) ++ os -- ( if totalShips < 300 then Nothing else (Just (Ships (s - (div totalShips totalPlanets)))))
+       = (concatMap (\(wId, nShips) -> (send wId (Just nShips) g)) departures) ++ os -- ( if totalShips < 300 then Nothing else (Just (Ships (s - (div totalShips totalPlanets)))))
       where 
-        wIds = map fst (take planetsToConquer (sortBy (flip cmp) (edgesFrom g pId)))
-        planetsToConquer = if totalShips < 300 then 1 else 10
+        departures =
+          if totalShips < 700 then
+            let gameStateToOptimize = GameState (M.map (\p@(Planet owner ships growth) -> if owner == Owned Player1 then p else Planet owner (ships + 1) growth) ps) ws fs in
+            let bkTargetPlanetIds = snd (optimise gameStateToOptimize (Source pId)) in
+            let shipsToSend = map (\pId -> let (Planet _ nShips _) = lookupPlanet pId gameStateToOptimize in nShips ) bkTargetPlanetIds in
+            let wormholeIds = concatMap (\tId -> M.keys (M.filter (\(Wormhole s t _) -> (s == Source pId) && (t == Target tId)) ws)) bkTargetPlanetIds in
+              zip wormholeIds shipsToSend
+          else
+            let nPlanetsToConquer = 5 in
+            let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (edgesFrom g pId))) in
+            let size = length wormholeIds in
+            let shipsToSend = replicate size (Ships (div s (size))) in -- TODO 
+              zip wormholeIds shipsToSend
+
         totalShips = sum (M.map (\(Planet _ (Ships x) _) -> x) ourPs)
         totalPlanets = M.size ourPs
+
 
         cmp :: (WormholeId, Wormhole) -> (WormholeId, Wormhole) -> Ordering
         cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
           | ourPlanet p1 = LT
           | ourPlanet p2 = GT 
-          | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2))
+          -- | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2))
+          | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
+
           -- | otherwise    = compare t1 t2
           where 
             pId1 = target w1
@@ -344,78 +363,23 @@ skynet g ai
             t1 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId1)
             t2 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId2)
 
-{-
-skynet g ai
-  | M.null (ranks ai) = skynet g ai {ranks = calRank}
-  | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [(show (sum [ s | (Order _ (Ships s)) <- os ]))], ai)
-  where 
-    os = (M.foldrWithKey generateAttack [] ourPs)
-    calRank = planetRank g 
-    ourPs = ourPlanets g 
-    outputGameStatus :: String 
-    outputGameStatus 
-      = "#" ++ show (shipSum + fleetSum)
-      where 
-        shipSum = sum [ calShips pId | pId <- vertices g]
-        fleetSum = sum [ if p == Player1 then s else -s | f@(Fleet p (Ships s) wId (Turns t)) <- fs ]
+turnsToTake :: PlanetId -> PlanetId -> Turns
+turnsToTake srcpid destpid = undefined
 
-        (GameState _ _ fs) = g
-        calShips :: PlanetId -> Int 
-        calShips id 
-          | ourPlanet p   = s
-          | enemyPlanet p = -s 
-          | otherwise     = 0
-          where 
-            p@(Planet _ (Ships s) _) = lookupPlanet id g
+dangerPoint :: GameState -> Int
+dangerPoint gs = undefined
 
-    generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
-    generateAttack pId (Planet _ (Ships s) _) os 
-      = [ (Order wId (Ships ((\x -> if x < 0 then 0 else x) . floor $ (totAttack * rank / totRanks)))) | (pId', wId, rank) <- targets ] ++ os
-      where 
-        totRanks = sum . filter (\x -> x > 0) . (map (\(_, _, x) -> x)) $ targets 
-        targets = applyParams pId g ai 
-        currDefenceRate = dangerRating pId g
+cost :: PlanetId -> Ships
+cost targetpid = undefined
 
-        (_ : _ : _ : _ : offensiveLevel : []) = params ai 
-        -- +1 here is to prevent divide by 0 error
-        totAttack = ((fromIntegral s) * (offensiveLevel * totRanks)) / (fromIntegral (currDefenceRate + 1) + (offensiveLevel * totRanks))
+pagerank :: GameState -> AIState -> PlanetRank
+pagerank gs ai = undefined
 
--- given a planet id, return orders to send ships to neighbours
-applyParams :: PlanetId -> GameState -> AIState -> [(PlanetId, WormholeId, Double)]
-applyParams pId g ai 
-  = [ (pId,
-      wId, 
-      pGro * (fromIntegral gro) + 
-      pPr * pr -
-      pT * t -
-      pDr * fromIntegral dr) | (pId, wId, gro, (PlanetRank pr), t, dr) <- adjList]
-  where 
-    (pGro : pPr : pT : pDr : _) = params ai 
-    currP = lookupPlanet pId g 
-    adjList = [ ( target w
-                , wId
-                , (\(Planet _ _ (Growth g)) -> g) (lookupPlanet (target w) g)
-                , (ranks ai) M.! (target w)
-                , fromInteger (weight w) 
-                , dangerRating (target w)  g)
-                | (wId, w) <- edgesFrom g pId ]
--}
+fleet :: GameState -> PlanetId -> Int
+fleet gs pid = undefined
 
--- coumpute sum of opponent ships in adjacent vertexs 
--- and multiply of wieght for all adjacent enemy vertices to attect the vertice
--- and all incomming enemy fleets amount times the remaning turns
-dangerRating :: PlanetId -> GameState -> Int
-dangerRating pId g 
-  = foldl drHelp 0 (edgesFrom g pId) + sum [ s * t | f@(Fleet p (Ships s) wId (Turns t)) <- fs, p == Player2, pId == target (lookupWormhole wId g) ]
-  where 
-    (GameState _ _ fs) = g
-
-    drHelp :: Int -> (WormholeId, Wormhole) -> Int
-    drHelp n (wId, w) 
-      | enemyPlanet p = n + s * (fromInteger (weight w))
-      | otherwise     = n
-      where 
-        p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
+choose :: GameState -> PlanetId -> (Growth, [PlanetId])
+choose gs srcpid = undefined
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
