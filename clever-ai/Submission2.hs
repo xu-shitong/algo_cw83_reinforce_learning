@@ -9,9 +9,8 @@ import Lib
   hiding (example1, example2, example3, lookupPlanet)
 import qualified Data.Map as M
 import Data.Map (Map)
-import Data.List (unfoldr)
-import Data.List
-import Data.Maybe
+import Data.List (concatMap, sortBy)
+import Data.Maybe ( isNothing, fromJust )
 import Text.Printf
 import Control.DeepSeq
 import GHC.Generics
@@ -77,6 +76,7 @@ send wId mShips st
   | owner == Neutral || owner == (Owned Player2) = []
   | mShips == Nothing            = [Order wId totalShips]
   | fromJust mShips > totalShips = [Order wId totalShips]
+  | fromJust mShips < 0 = []
   | otherwise = [Order wId (fromJust mShips)]
     where
       Wormhole (Source src) _ _ = lookupWormhole wId st
@@ -322,15 +322,19 @@ skynet g ai
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
-      | otherwise = (send wId Nothing g) ++ os
+       = (concatMap (\wId -> (send wId (Just (Ships (div s (planetsToConquer + 1)))) g)) wIds) ++ os -- ( if totalShips < 300 then Nothing else (Just (Ships (s - (div totalShips totalPlanets)))))
       where 
-        (wId, _) = maximumBy cmp (edgesFrom g pId)
+        wIds = map fst (take planetsToConquer (sortBy (flip cmp) (edgesFrom g pId)))
+        planetsToConquer = if totalShips < 300 then 1 else 10
+        totalShips = sum (M.map (\(Planet _ (Ships x) _) -> x) ourPs)
+        totalPlanets = M.size ourPs
 
         cmp :: (WormholeId, Wormhole) -> (WormholeId, Wormhole) -> Ordering
         cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
           | ourPlanet p1 = LT
           | ourPlanet p2 = GT 
-          | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
+          | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2))
+          -- | otherwise    = compare t1 t2
           where 
             pId1 = target w1
             pId2 = target w2
