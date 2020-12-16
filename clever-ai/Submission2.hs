@@ -13,6 +13,8 @@ import qualified Data.Map as M
 import Data.Map (Map)
 import Data.List (concatMap, sortBy)
 import Data.Maybe ( isNothing, fromJust )
+import Data.Set (Set)
+import qualified Data.Set as S
 import Text.Printf
 import Control.DeepSeq
 import GHC.Generics
@@ -315,6 +317,20 @@ How to devide ships:
  - if danger is high, then move all the ships to a safer place, or if it is possible, try to conquer one of their planets
 -}
 
+canReachOpponentPlanet :: PlanetId -> Planet -> GameState -> Bool
+canReachOpponentPlanet pId p g =
+  canReachOpponentPlanetHelper pId p g S.empty
+  where
+    canReachOpponentPlanetHelper :: PlanetId -> Planet -> GameState -> Set PlanetId -> Bool
+    canReachOpponentPlanetHelper pId p@(Planet owner _ _) g s
+      | owner /= Owned Player1 = True
+      | S.member pId s = False
+      | otherwise = or (map (\x -> canReachOpponentPlanetHelper x (lookupPlanet x g) g (S.insert x s)) reachablePlanets)
+        where 
+          edges = edgesFrom g pId
+          reachablePlanets = map (\(_, Wormhole _ (Target tId) _) -> tId) edges
+  
+
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
@@ -326,7 +342,7 @@ skynet g@(GameState ps ws fs) ai
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
     generateAttack pId (Planet _ (Ships s) _) os 
-       = (concatMap (\(wId, nShips) -> (send wId (Just nShips) g)) departures) ++ os -- ( if totalShips < 300 then Nothing else (Just (Ships (s - (div totalShips totalPlanets)))))
+       = concatMap (\(wId, nShips) -> send wId (Just nShips) g) departures ++ os
       where 
         departures =
           if totalShips < 300 then
@@ -337,9 +353,10 @@ skynet g@(GameState ps ws fs) ai
               zip wormholeIds shipsToSend
           else
             let nPlanetsToConquer = max 1 (div totalShips 150) in
-            let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (edgesFrom g pId))) in
+            let wormholeIds = map fst (take nPlanetsToConquer (sortBy (flip cmp) (filter (\(_, Wormhole _ (Target tId) _) -> canReachOpponentPlanet tId (lookupPlanet tId g) g) (edgesFrom g pId)))) in
             let size = length wormholeIds in
-            let shipsToSend = replicate size (Ships (div s (size))) in -- TODO 
+            let totalWeight = sum (map (\x -> 1 / (fromIntegral x :: Float)) (take (size + 1) [1..])) in
+            let shipsToSend = take size (map (\x -> (Ships (floor ((fromIntegral s :: Float) / totalWeight / (fromIntegral x :: Float))))) [1..])  in -- TODO 
               zip wormholeIds shipsToSend
 
         totalShips = sum (M.map (\(Planet _ (Ships x) _) -> x) ourPs)
@@ -350,19 +367,19 @@ skynet g@(GameState ps ws fs) ai
         cmp (_, w1@(Wormhole _ _ (Turns ts1))) (_, w2@(Wormhole _ _ (Turns ts2))) 
           | ourPlanet p1 = LT
           | ourPlanet p2 = GT 
-          | otherwise    = compare (t1 / exp (fromIntegral s1 :: Double) / fromIntegral (ts1 * dr1)) (t2 / exp (fromIntegral s2 :: Double) / fromIntegral (ts2 * dr2))
-          -- | otherwise    = compare (t1 / fromIntegral (s1 * ts1)) (t2 / fromIntegral (s2 * ts2))
-
-          -- | otherwise    = compare t1 t2
+          | otherwise    = compare (t1 / fromIntegral (s1 * ts1 * dr1)) (t2 / fromIntegral (s2 * ts2 * dr2))
           where 
             pId1 = target w1
             pId2 = target w2
+
             p1@(Planet _ (Ships s1) _) = (lookupPlanet pId1 g)
             p2@(Planet _ (Ships s2) _) = (lookupPlanet pId2 g)
 
+            -- PlanetRank values of two planets
             t1 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId1)
             t2 = (\(PlanetRank d) -> d) ((ranks ai) M.! pId2)
 
+            -- danger ratings of two planets
             dr1 = dangerRating pId1 g
             dr2 = dangerRating pId2 g
 
