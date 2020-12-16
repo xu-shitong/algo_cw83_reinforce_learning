@@ -279,13 +279,12 @@ checkPlanetRanks = sum . M.elems
 planetRankRush :: GameState -> AIState 
                -> ([Order], Log, AIState)
 planetRankRush gs ai
-  | isFirstTime = (orders, [], ai { ranks = ranking })
+  | isFirstTime = (orders, [], ai { ranks = planetRank gs })
   | isNothing target = ([], ["There is no more planet to conquer!"], ai)
   | otherwise = (orders, [], ai)
     where isFirstTime = ranks ai == M.empty
-          ranking = planetRank gs
           orders = attackFromAll (fromJust target) gs
-          target = if isFirstTime then getTarget gs ranking else getTarget gs (ranks ai)
+          target = if isFirstTime then getTarget gs (planetRank gs) else getTarget gs (ranks ai)
 
 getTarget :: GameState -> PlanetRanks -> Maybe PlanetId
 getTarget gs rks
@@ -334,10 +333,9 @@ canReachOpponentPlanet pId p g =
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
-  | M.null (ranks ai) = skynet g ai {ranks = calRank}
+  | M.null (ranks ai) = skynet g ai {ranks = planetRank g}
   | otherwise         = ((M.foldrWithKey generateAttack [] ourPs), [], ai)
   where 
-    calRank = planetRank g 
     ourPs = ourPlanets g 
 
     generateAttack :: PlanetId -> Planet -> [Order] -> [Order] 
