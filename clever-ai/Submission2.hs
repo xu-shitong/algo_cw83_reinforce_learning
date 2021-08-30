@@ -46,8 +46,8 @@ data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
   , ranks :: PlanetRanks
-  , strategyPoints :: PlanetRanks
-  , params :: [Double]
+  -- , strategyPoints :: PlanetRanks
+  -- , params :: [Double]
   } deriving Generic
  
 initialState :: AIState
@@ -55,8 +55,8 @@ initialState = AIState
   { turn = 0
   , rushTarget = Nothing
   , ranks = M.empty 
-  , strategyPoints = M.empty
-  , params = [7, 0, 0.1, 0.1, 50]
+  -- , strategyPoints = M.empty
+  -- , params = [7, 0, 0.1, 0.1, 50]
   }
   
 type Log = [String]
@@ -316,6 +316,8 @@ How to devide ships:
  - if danger is high, then move all the ships to a safer place, or if it is possible, try to conquer one of their planets
 -}
 
+
+{- previous code which does not use reinforce learning
 canReachOpponentPlanet :: PlanetId -> Planet -> GameState -> Bool
 canReachOpponentPlanet pId p g =
   canReachOpponentPlanetHelper pId p g S.empty
@@ -394,6 +396,11 @@ dangerRating pId g
       | otherwise     = n
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
+-}
+skynet :: GameState -> AIState
+       -> ([Order], Log, AIState)
+skynet g ai 
+  = undefined
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
