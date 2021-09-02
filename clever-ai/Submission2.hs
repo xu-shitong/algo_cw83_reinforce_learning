@@ -11,7 +11,7 @@ import Lib
   hiding (example1, example2, example3, lookupPlanet)
 import qualified Data.Map as M
 import Data.Map (Map)
-import Data.List (concatMap, sortBy)
+import Data.List (concatMap, sortBy, nub)
 import Data.Maybe ( isNothing, fromJust )
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -46,8 +46,6 @@ data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
   , ranks :: PlanetRanks
-  -- , strategyPoints :: PlanetRanks
-  -- , params :: [Double]
   } deriving Generic
  
 initialState :: AIState
@@ -397,10 +395,107 @@ dangerRating pId g
       where 
         p@(Planet _ (Ships s) _) = lookupPlanet (target w) g 
 -}
+
+type PlanetFeature = Map PlanetId [Double] -- neural net feature of a planet
+
+feature_num = 6
+-- index of features 
+gen_index = 0 -- index of generate rate feature
+amount_index = 1
+is_friend = 2
+surround_index = 3
+friend_to_index = 4
+enemy_to_index = 5
+
+-- get planets adjacent to frient planets
+getAdjacentPlanets :: [PlanetId] -> GameState -> [PlanetId]
+getAdjacentPlanets start_p_ids g 
+  = nub (concatMap (\x -> M.elems (M.map target x)) adjWormholes)
+  where
+    adjWormholes = map (\(pId) -> wormholesFrom (Source pId) g) start_p_ids
+
+-- get Features for each planet, parameters will be passed to neural net for calculation
+generateFeatures :: GameState -> [PlanetId] -> PlanetFeature
+generateFeatures gs@(GameState allPs ws fs) adjPs 
+  = featureTable''
+  where 
+    PlanetId maxPlanetId = maximum adjPs
+    enemyPlanets = M.filter enemyPlanet allPs
+
+    featureTable :: PlanetFeature
+
+    -- 1. fill in feature value of gen rate, ship number, is friend, leave surrounding, frind enemy fleet feature zero
+    featureTable = foldr (\pId m -> M.insert pId (getGenVal pId ++ (replicate (feature_num - 1) 0)) m) M.empty adjPs
+    -- 2. get total surrounding enemy number
+    featureTable' = M.foldrWithKey (\ek ep m -> updateSurroundFeature m ek ep) featureTable enemyPlanets
+    -- 3. get fleet transfering to the planet
+    featureTable'' = foldr (\(Fleet owner s w t) m -> updateFleetFeature m owner s w t) featureTable' fs
+    
+    -- get generate rate, ship number, is friend of planet with given pId
+    getGenVal :: PlanetId -> [Double]
+    getGenVal pId 
+      = [fromIntegral g, fromIntegral s, isFriend]
+      where 
+        (Planet owner (Ships s) (Growth g)) = lookupPlanet pId gs
+        isFriend = if owner == Owned Player1 then 1 
+                   else if owner == Owned Player2 then -1
+                   else 0
+                    
+    -- update surrounding enemy ship feature
+    updateSurroundFeature :: PlanetFeature -> PlanetId -> Planet -> PlanetFeature
+    updateSurroundFeature m pId (Planet _ (Ships s) _)
+      = foldr (\(Wormhole _ (Target target_pId) _) m' -> M.adjust target_pId (\list -> addInPlace list surround_index (fromIntegral s)) m') m ws 
+      where 
+        ws = M.elems (wormholesFrom (Source pId) gs)
+
+
+    -- update features in table about fleet moving, Return Updated Map 
+    updateFleetFeature :: PlanetFeature -> Player -> Ships -> WormholeId -> Turns -> PlanetFeature
+    updateFleetFeature prevMap owner (Ships s) wId (Turns t)
+      = undefined
+      -- = M.adjust targetPId addedFeature prevMap
+      where 
+        targetPId = target (lookupWormhole wId gs)
+        friendFleet = if owner == Player1 then (fromIntegral s) / (fromIntegral t) else 0
+        enemyFleet  = if owner == Player2 then (fromIntegral s) / (fromIntegral t) else 0
+
+        addedFeature = (\list -> addInPlace 
+                                   (addInPlace list enemy_to_index enemyFleet)
+                                   friend_to_index 
+                                   friendFleet)
+
+    -- return a list, which add a given value on given position
+    addInPlace :: [Double] -> Int -> Double -> [Double]
+    addInPlace list index val 
+      = [ if i == index 
+          then val + list !! i
+          else list !! i
+          | i <- [0..feature_num]]
+
+-- forward through neural net, generate 2 values for each planet
+forward :: PlanetFeature -> PlanetFeature 
+forward 
+  = undefined
+
+-- based on neural net generated results, randomly choose value around the range as value used in generating attack, 
+-- then generate attack orders
+generateAttack :: PlanetFeature -> (PlanetFeature, [Order])
+generateAttack 
+  = undefined
+
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
-skynet g ai 
+skynet g@(GameState ps ws fs) ai 
   = undefined
+  -- = (order, [features + output], ai)
+  where 
+    -- get all examined planets, including friend planets and adjacent planets
+    friend_planets = M.keys (ourPlanets g )
+    adjacent_planets = getAdjacentPlanets friend_planets g
+
+    -- features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
+    -- outputs = forward features
+    -- order = generateAttack outputs
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
