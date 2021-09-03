@@ -450,6 +450,15 @@ surround_index = 3
 friend_to_index = 4
 enemy_to_index = 5
 
+-- network parameters
+-- network contains 2 hidden layers, with 8 neurons, and one output layer, with 2 neurons 
+hidden1_w = [[1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6]]
+hidden1_b = [1,2,3,4,5,6,7,8]
+hidden2_w = [[1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8]]
+hidden2_b = [1,2,3,4,5,6,7,8]
+output_w = [[1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8]]
+output_b = [1,2]
+
 -- get planets adjacent to frient planets
 getAdjacentPlanets :: [PlanetId] -> GameState -> [PlanetId]
 getAdjacentPlanets start_p_ids g 
@@ -514,10 +523,31 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
           else list !! i
           | i <- [0..feature_num-1]]
 
--- forward through neural net, generate 2 values for each planet
-forward :: PlanetFeature -> PlanetFeature 
-forward 
-  = undefined
+-- forward a batch of planet through neural net, generate 2 values for each planet
+-- batch size is varying, equal to map size provided
+forward_batch :: PlanetFeature -> PlanetFeature 
+forward_batch m 
+  = M.map (forward) m
+  where 
+
+    -- relu activation function
+    relu :: [Double] -> [Double]
+    relu 
+      = map (max 0)
+
+    -- forward one feature through one neural net layer
+    forward_one :: [Double] -> [[Double]] -> [Double] -> [Double]
+    forward_one x weight_matrix bias_vector
+      = map (\(b, x) -> b + x) (zip bias_vector [sum (map (\(w, x) -> w * x) (zip w x)) | w <- weight_matrix])
+
+    -- forward one feature through the neural net
+    forward :: [Double] -> [Double]
+    forward x
+      = output
+      where 
+        layer1_out = relu (forward_one x hidden1_w hidden1_b)
+        layer2_out = relu (forward_one layer1_out hidden2_w hidden1_b)
+        output = forward_one layer2_out output_w output_b
 
 -- based on neural net generated results, randomly choose value around the range as value used in generating attack, 
 -- then generate attack orders
@@ -529,14 +559,14 @@ generateAttack
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
-  = ([], [show (M.toList features)], ai)
+  = ([], map show (M.elems features) ++ ["outputs: " ++ show outputs], ai)
   where 
     -- get all examined planets, including friend planets and adjacent planets
     friend_planets = M.keys (ourPlanets g )
     adjacent_planets = getAdjacentPlanets friend_planets g
 
     features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
-    -- outputs = forward features
+    outputs = forward_batch features
     -- order = generateAttack outputs
 
 deriving instance Generic PlanetRank
