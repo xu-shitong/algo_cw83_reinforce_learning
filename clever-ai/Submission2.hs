@@ -59,8 +59,40 @@ initialState = AIState
   
 type Log = [String]
 
+-- get enemy fleets that are heading towards friend planets
+logIncomingFleet :: GameState -> String
+logIncomingFleet g@(GameState ps ws fs)
+  = show (filter (\(pId, player, _, _) -> (elem pId (M.keys friendPs)) && (player == Player2)) [ (target (lookupWormhole wId g), player, s, t) | (Fleet player s wId t) <- fs ])
+  where 
+    friendPs = ourPlanets g
+
+-- get friend fleets that are heading towards other planets
+logAttackingFleet :: GameState -> String
+logAttackingFleet g@(GameState ps ws fs)
+  = show (filter (\(pId, player, _, _) -> (elem pId (M.keys enemyPs)) && (player == Player1)) [ (target (lookupWormhole wId g), player, s, t) | (Fleet player s wId t) <- fs ])
+  where 
+    enemyPs = M.filter (not . ourPlanet) ps
+
+-- get friend fleet transfering between friend planets
+logTransferFleet :: GameState -> String 
+logTransferFleet g@(GameState ps ws fs)
+  = show (filter (\(pId, player, _, _) -> (elem pId (M.keys friendPs)) && (player == Player1)) [ (target (lookupWormhole wId g), player, s, t) | (Fleet player s wId t) <- fs ])
+  where 
+    friendPs = ourPlanets g
+
+-- get friend planet ids
+logFriendPlanet :: GameState -> String
+logFriendPlanet g@(GameState ps ws fs)
+  = show (ourPlanets g)
+
+-- ai that print the necessary information for debug
 pacifist :: GameState -> AIState -> ([Order], Log, AIState)
-pacifist _ ai = ([], ["Do no harm."], ai)
+pacifist g@(GameState ps ws fs) ai 
+  = ([], 
+     ["friend: " ++ (logFriendPlanet g), 
+      "incoming fleets: " ++ (logIncomingFleet g), 
+      "attacking fleets: " ++ (logAttackingFleet g)],
+     ai)
 
 enemyPlanet :: Planet -> Bool
 enemyPlanet (Planet (Owned Player2) _ _) = True
@@ -120,16 +152,27 @@ attackFromAll targetId gs
 
 zergRush :: GameState -> AIState 
          -> ([Order], Log, AIState)
-zergRush gs ai
+zergRush g ai
   | t == Nothing || o == Player1 = case nextEnemy of  
           Nothing -> ([], [], ai) 
-          _       -> zergRush gs ai {rushTarget = nextEnemy }
-  | otherwise = (attackFromAll tId gs, ["attacking " ++ (show tId)], ai)
+          _       -> zergRush g ai {rushTarget = nextEnemy }
+  | otherwise = (attackFromAll tId g, 
+                  ["friend: " ++ (logFriendPlanet g), 
+                  "incoming fleets: " ++ (logIncomingFleet g), 
+                  "attacking fleets: " ++ (logAttackingFleet g), 
+                  "transfer fleet: " ++ (logTransferFleet g),
+                  "features: " ++ (show (M.toList features))], 
+                  ai)
   where 
-    nextEnemy = findEnemyPlanet gs
+    nextEnemy = findEnemyPlanet g
     t = rushTarget ai
     tId = fromJust t
-    target@(Planet (Owned o) _ _) = lookupPlanet tId gs 
+    target@(Planet (Owned o) _ _) = lookupPlanet tId g
+
+    friend_planets = M.keys (ourPlanets g )
+    adjacent_planets = getAdjacentPlanets friend_planets g
+
+    features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
     
 newtype PageRank = PageRank Double
   deriving (Num, Eq, Ord, Fractional)
@@ -424,8 +467,8 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
 
     featureTable :: PlanetFeature
 
-    -- 1. fill in feature value of gen rate, ship number, is friend, leave surrounding, frind enemy fleet feature zero
-    featureTable = foldr (\pId m -> M.insert pId (getGenVal pId ++ (replicate (feature_num - 1) 0)) m) M.empty adjPs
+    -- 1. fill in feature value of gen rate, ship number, is friend; leave surrounding, frind, enemy fleet features zero
+    featureTable = foldr (\pId m -> M.insert pId (getGenVal pId ++ (replicate (feature_num - 3) 0)) m) M.empty adjPs
     -- 2. get total surrounding enemy number
     featureTable' = M.foldrWithKey (\ek ep m -> updateSurroundFeature m ek ep) featureTable enemyPlanets
     -- 3. get fleet transfering to the planet
@@ -444,7 +487,7 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
     -- update surrounding enemy ship feature
     updateSurroundFeature :: PlanetFeature -> PlanetId -> Planet -> PlanetFeature
     updateSurroundFeature m pId (Planet _ (Ships s) _)
-      = foldr (\(Wormhole _ (Target target_pId) _) m' -> M.adjust target_pId (\list -> addInPlace list surround_index (fromIntegral s)) m') m ws 
+      = foldr (\(Wormhole _ (Target target_pId) _) m' -> M.adjust (\list -> addInPlace list surround_index (fromIntegral s)) target_pId m') m ws 
       where 
         ws = M.elems (wormholesFrom (Source pId) gs)
 
@@ -452,8 +495,7 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
     -- update features in table about fleet moving, Return Updated Map 
     updateFleetFeature :: PlanetFeature -> Player -> Ships -> WormholeId -> Turns -> PlanetFeature
     updateFleetFeature prevMap owner (Ships s) wId (Turns t)
-      = undefined
-      -- = M.adjust targetPId addedFeature prevMap
+      = M.adjust addedFeature targetPId prevMap
       where 
         targetPId = target (lookupWormhole wId gs)
         friendFleet = if owner == Player1 then (fromIntegral s) / (fromIntegral t) else 0
@@ -470,7 +512,7 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
       = [ if i == index 
           then val + list !! i
           else list !! i
-          | i <- [0..feature_num]]
+          | i <- [0..feature_num-1]]
 
 -- forward through neural net, generate 2 values for each planet
 forward :: PlanetFeature -> PlanetFeature 
@@ -483,17 +525,17 @@ generateAttack :: PlanetFeature -> (PlanetFeature, [Order])
 generateAttack 
   = undefined
 
+-- the GREATEST ai that use reinforce learning
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
-  = undefined
-  -- = (order, [features + output], ai)
+  = ([], [show (M.toList features)], ai)
   where 
     -- get all examined planets, including friend planets and adjacent planets
     friend_planets = M.keys (ourPlanets g )
     adjacent_planets = getAdjacentPlanets friend_planets g
 
-    -- features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
+    features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
     -- outputs = forward features
     -- order = generateAttack outputs
 

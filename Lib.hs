@@ -440,7 +440,7 @@ deriving instance Eq PlanetId
 deriving instance Num PlanetId
 deriving instance B.Binary PlanetId
 instance Show PlanetId where
-  show (PlanetId x) = show x
+  show (PlanetId x) = "pId:" ++ show x
 instance Read PlanetId where
   readsPrec = coerce (readsPrec @Int)
 
@@ -449,7 +449,7 @@ deriving instance Eq Turns
 deriving instance Num Turns
 deriving instance B.Binary Turns
 instance Show Turns where
-  show (Turns x) = show x
+  show (Turns x) = "t: " ++ show x
 instance Read Turns where
   readsPrec = coerce (readsPrec @Int)
 
@@ -466,7 +466,7 @@ deriving instance Ord Growth
 deriving instance Eq Growth
 deriving instance B.Binary Growth
 instance Show Growth where
-  show (Growth x) = show x
+  show (Growth x) = "g: " ++ show x
 instance Read Growth where
   readsPrec = coerce (readsPrec @Int)
 
@@ -476,7 +476,7 @@ deriving instance Ord Ships
 deriving instance Eq Ships
 deriving instance B.Binary Ships
 instance Show Ships where
-  show (Ships x) = show x
+  show (Ships x) = "s: " ++ show x
 instance Read Ships where
   readsPrec = coerce (readsPrec @Int)
 
@@ -492,7 +492,7 @@ deriving instance Eq WormholeId
 deriving instance Ord WormholeId
 deriving instance B.Binary WormholeId
 instance Show WormholeId where
-  show (WormholeId x) = show x
+  show (WormholeId x) = "wId:" ++ show x
 instance Read WormholeId where
   readsPrec = coerce (readsPrec @Int)
 
