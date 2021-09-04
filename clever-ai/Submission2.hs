@@ -46,6 +46,8 @@ data AIState = AIState
   { turn :: Turns
   , rushTarget :: Maybe PlanetId
   , ranks :: PlanetRanks
+  , adjMap :: Map PlanetId [PlanetId]
+  , planetWormholeMap :: Map (PlanetId, PlanetId) WormholeId
   } deriving Generic
  
 initialState :: AIState
@@ -53,8 +55,8 @@ initialState = AIState
   { turn = 0
   , rushTarget = Nothing
   , ranks = M.empty 
-  -- , strategyPoints = M.empty
-  -- , params = [7, 0, 0.1, 0.1, 50]
+  , adjMap = M.empty
+  , planetWormholeMap = M.empty
   }
   
 type Log = [String]
@@ -160,19 +162,13 @@ zergRush g ai
                   ["friend: " ++ (logFriendPlanet g), 
                   "incoming fleets: " ++ (logIncomingFleet g), 
                   "attacking fleets: " ++ (logAttackingFleet g), 
-                  "transfer fleet: " ++ (logTransferFleet g),
-                  "features: " ++ (show (M.toList features))], 
+                  "transfer fleet: " ++ (logTransferFleet g)],
                   ai)
   where 
     nextEnemy = findEnemyPlanet g
     t = rushTarget ai
     tId = fromJust t
     target@(Planet (Owned o) _ _) = lookupPlanet tId g
-
-    friend_planets = M.keys (ourPlanets g )
-    adjacent_planets = getAdjacentPlanets friend_planets g
-
-    features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
     
 newtype PageRank = PageRank Double
   deriving (Num, Eq, Ord, Fractional)
@@ -450,21 +446,54 @@ surround_index = 3
 friend_to_index = 4
 enemy_to_index = 5
 
+-- index of outputs
+valueIndex = 0
+attRatioIndex = 1
+
+-- parameters used to explore parameters
+epsilon = 0.1
+
 -- network parameters
 -- network contains 2 hidden layers, with 8 neurons, and one output layer, with 2 neurons 
-hidden1_w = [[1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6], [1,2,3,4,5,6]]
-hidden1_b = [1,2,3,4,5,6,7,8]
-hidden2_w = [[1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8]]
-hidden2_b = [1,2,3,4,5,6,7,8]
-output_w = [[1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8]]
-output_b = [1,2]
+hidden1_w = [[0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600]]
+hidden1_b = [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800]
+hidden2_w = [[0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800],
+              [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800]]
+hidden2_b = [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800]
+output_w = [[0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800], [0.0100, 0.0200, 0.0300, 0.0400, 0.0500, 0.0600, 0.0700, 0.0800]]
+output_b = [0.01,0.02]
 
--- get planets adjacent to frient planets
-getAdjacentPlanets :: [PlanetId] -> GameState -> [PlanetId]
-getAdjacentPlanets start_p_ids g 
-  = nub (concatMap (\x -> M.elems (M.map target x)) adjWormholes)
-  where
-    adjWormholes = map (\(pId) -> wormholesFrom (Source pId) g) start_p_ids
+-- get map from each planet to its adjacent planet
+getAdjMap :: GameState -> Map PlanetId [PlanetId]
+getAdjMap g@(GameState ps ws _)
+  = M.foldr (\(Wormhole (Source s) (Target t) _) m -> M.adjust (\list -> t : list) s m) emptyMap ws
+  where 
+    -- create empty map contain all planet ids but each has empty adj list
+    emptyMap = M.foldrWithKey (\pId _ m -> M.insert pId [] m ) M.empty ps
+
+-- get list of planets adjacent to given planets
+getAdjacentPlanets :: [PlanetId] -> AIState -> [PlanetId]
+getAdjacentPlanets startPIds ai
+  = nub . concat . M.elems . M.filterWithKey (\k _ -> elem k startPIds) $ (adjMap ai)
+
+-- get map from planet Id pair to wormhole Id
+getPlanetWormMap :: GameState -> Map (PlanetId, PlanetId) WormholeId
+getPlanetWormMap g@(GameState _ ws _)
+  = M.foldrWithKey (\wId w m -> M.insert (source w, target w) wId m) M.empty ws 
+
 
 -- get Features for each planet, parameters will be passed to neural net for calculation
 generateFeatures :: GameState -> [PlanetId] -> PlanetFeature
@@ -523,51 +552,108 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
           else list !! i
           | i <- [0..feature_num-1]]
 
--- forward a batch of planet through neural net, generate 2 values for each planet
+-- forward a batch of sample through neural net, generate 2 values for each planet
 -- batch size is varying, equal to map size provided
 forward_batch :: PlanetFeature -> PlanetFeature 
 forward_batch m 
   = M.map (forward) m
   where 
-
     -- relu activation function
     relu :: [Double] -> [Double]
     relu 
       = map (max 0)
 
-    -- forward one feature through one neural net layer
+    -- sigmoid activation function, used to cap attackRatio of each planet to [0, 1] range
+    sigmoid :: [Double] -> [Double]
+    sigmoid 
+      = map (\x -> 1 / (1 + exp (-x)))
+
+    -- forward one sample through one neural net layer
     forward_one :: [Double] -> [[Double]] -> [Double] -> [Double]
     forward_one x weight_matrix bias_vector
       = map (\(b, x) -> b + x) (zip bias_vector [sum (map (\(w, x) -> w * x) (zip w x)) | w <- weight_matrix])
 
-    -- forward one feature through the neural net
+    -- forward one sample through the neural net
     forward :: [Double] -> [Double]
     forward x
       = output
       where 
         layer1_out = relu (forward_one x hidden1_w hidden1_b)
         layer2_out = relu (forward_one layer1_out hidden2_w hidden1_b)
-        output = forward_one layer2_out output_w output_b
+        output = sigmoid (forward_one layer2_out output_w output_b)
+
+-- generate a value close to the given value, but NOT THE SAME, 
+-- used to explore better parameter and calculate gradient in reinforce learning
+explore :: PlanetFeature -> PlanetFeature
+explore
+  = id
+  -- | v' == v   = explore aiState' v
+  -- | otherwise = (aiState', v')
+  -- where 
+  --   (rand, seed') = randomR (-epsilon, epsilon) (seed aiState)
+  --   aiState' = aiState {seed = seed'}
+  --   v' = clamp (rand + v)
+  --   -- clamp value to range [0, 1]
+  --   clamp :: Double -> Double
+  --   clamp 
+  --     = max 0 (min 1)
 
 -- based on neural net generated results, randomly choose value around the range as value used in generating attack, 
 -- then generate attack orders
-generateAttack :: PlanetFeature -> (PlanetFeature, [Order])
-generateAttack 
-  = undefined
+generateAttack :: [PlanetId] -> PlanetFeature -> GameState -> AIState -> [Order]
+generateAttack friends m g ai
+  = orders
+  where 
+    planetWormMap = (planetWormholeMap ai) 
+
+    orders = 
+      concat [ -- concat different planets' orders
+      map -- for each planet, generate its attack orders
+      (\(targetPId, v) -> 
+        let 
+        wId = planetWormMap M.! (pId, targetPId); -- the wormhole planet with pId is sending attach through
+        attackRatio = (m M.! pId) !! attRatioIndex; -- the percentage of ship sent to attack
+        (Planet _ (Ships totShipNum) _) = lookupPlanet pId g; -- total amount of ship in planet pId
+        ships = Ships . floor $ (v * attackRatio * (fromIntegral totShipNum))  -- the attack ship amount
+        in (Order wId ships)
+      )
+      adjPs
+      | (pId, adjPs) <- M.toList record']
+
+    -- record planet value around each friend planet
+    record :: Map PlanetId [(PlanetId, Double)]
+    record = (M.map (\vs -> map (\p -> (p, (m M.! p) !! valueIndex)) vs)) . (M.filterWithKey (\k _ -> elem k friends)) $ (adjMap ai)
+
+    -- record that change planet value to softmax value
+    record' = M.map softmax record
+
+    -- softmax function applied to one planet's adjacent planets' values
+    softmax :: [(PlanetId, Double)] -> [(PlanetId, Double)]
+    softmax list 
+      = map (\(pId, v) -> (pId, v / expValSum)) expList 
+      where 
+        expList = map (\(pId, v) -> (pId, exp v)) list
+        expValSum = sum (map snd list)
 
 -- the GREATEST ai that use reinforce learning
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
-  = ([], map show (M.elems features) ++ ["outputs: " ++ show outputs], ai)
+  | adjMap ai == M.empty = skynet g (ai {adjMap = getAdjMap g, planetWormholeMap = getPlanetWormMap g})
+  | otherwise = (orders, map show (M.elems features) ++ ["outputs: " ++ show exploredNetOutputs], ai)
   where 
     -- get all examined planets, including friend planets and adjacent planets
     friend_planets = M.keys (ourPlanets g )
-    adjacent_planets = getAdjacentPlanets friend_planets g
+    adjacent_planets = getAdjacentPlanets friend_planets ai
 
+    -- get feature of each planet, forward through network
     features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
-    outputs = forward_batch features
-    -- order = generateAttack outputs
+    netOutputs = forward_batch features
+
+    -- explore values by taking values in (-eplison, epsilon) range
+    exploredNetOutputs = explore netOutputs
+
+    orders = generateAttack friend_planets exploredNetOutputs g ai
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
