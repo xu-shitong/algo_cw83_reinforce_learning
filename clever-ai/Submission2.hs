@@ -19,6 +19,9 @@ import Text.Printf
 import Control.DeepSeq
 import GHC.Generics
 
+import System.Random (StdGen, mkStdGen, randomR)
+
+
 import System.IO  
 import Control.Monad
 
@@ -48,6 +51,7 @@ data AIState = AIState
   , ranks :: PlanetRanks
   , adjMap :: Map PlanetId [PlanetId]
   , planetWormholeMap :: Map (PlanetId, PlanetId) WormholeId
+  , seed :: StdGen 
   } deriving Generic
  
 initialState :: AIState
@@ -57,6 +61,7 @@ initialState = AIState
   , ranks = M.empty 
   , adjMap = M.empty
   , planetWormholeMap = M.empty
+  , seed = mkStdGen 42
   }
   
 type Log = [String]
@@ -582,21 +587,30 @@ forward_batch m
         layer2_out = relu (forward_one layer1_out hidden2_w hidden1_b)
         output = sigmoid (forward_one layer2_out output_w output_b)
 
--- generate a value close to the given value, but NOT THE SAME, 
+-- generate a value close to the given value
 -- used to explore better parameter and calculate gradient in reinforce learning
-explore :: PlanetFeature -> PlanetFeature
-explore
-  = id
-  -- | v' == v   = explore aiState' v
-  -- | otherwise = (aiState', v')
-  -- where 
-  --   (rand, seed') = randomR (-epsilon, epsilon) (seed aiState)
-  --   aiState' = aiState {seed = seed'}
-  --   v' = clamp (rand + v)
-  --   -- clamp value to range [0, 1]
-  --   clamp :: Double -> Double
-  --   clamp 
-  --     = max 0 (min 1)
+explore :: PlanetFeature -> AIState -> (AIState, PlanetFeature)
+explore m ai 
+  = M.foldrWithKey (\pId outList (ai', m') -> explore' ai' m' pId outList) (ai, M.empty) m
+  where 
+    -- for one pId-output map entity, generate its explored output and add to result feature map
+    explore' :: AIState -> PlanetFeature -> PlanetId -> [Double] -> (AIState, PlanetFeature)
+    explore' ai m pId outList
+      = (ai', M.insert pId exploredNetList m)
+      where 
+        (ai', exploredNetList) = foldr oneRand (ai, []) outList
+
+    -- append one random value to the pair
+    oneRand :: Double -> (AIState, [Double]) -> (AIState, [Double])
+    oneRand v (ai, ls)
+      = (ai {seed = seed'} , clamp (v + rand) : ls)
+      where
+        (rand, seed') = randomR (-epsilon, epsilon) (seed ai)
+    
+    -- clamp value to range [0, 1]
+    clamp :: Double -> Double
+    clamp 
+      = max 0 . (min 1)
 
 -- based on neural net generated results, randomly choose value around the range as value used in generating attack, 
 -- then generate attack orders
@@ -633,14 +647,20 @@ generateAttack friends m g ai
       = map (\(pId, v) -> (pId, v / expValSum)) expList 
       where 
         expList = map (\(pId, v) -> (pId, exp v)) list
-        expValSum = sum (map snd list)
+        expValSum = sum (map snd expList)
 
 -- the GREATEST ai that use reinforce learning
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
 skynet g@(GameState ps ws fs) ai 
   | adjMap ai == M.empty = skynet g (ai {adjMap = getAdjMap g, planetWormholeMap = getPlanetWormMap g})
-  | otherwise = (orders, map show (M.elems features) ++ ["outputs: " ++ show exploredNetOutputs], ai)
+  | otherwise 
+    = (orders, 
+        ("friends: " ++ show friend_planets) : 
+        map show (M.toList features) ++ 
+        ["explored outputs: " ++ show exploredNetOutputs] ++ 
+        ("orders: " : map show orders),
+      ai') 
   where 
     -- get all examined planets, including friend planets and adjacent planets
     friend_planets = M.keys (ourPlanets g )
@@ -651,9 +671,9 @@ skynet g@(GameState ps ws fs) ai
     netOutputs = forward_batch features
 
     -- explore values by taking values in (-eplison, epsilon) range
-    exploredNetOutputs = explore netOutputs
+    (ai', exploredNetOutputs) = explore netOutputs ai
 
-    orders = generateAttack friend_planets exploredNetOutputs g ai
+    orders = generateAttack friend_planets exploredNetOutputs g ai'
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank
