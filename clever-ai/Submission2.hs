@@ -649,7 +649,7 @@ generateAttack friends m g ai
         expList = map (\(pId, v) -> (pId, exp v)) list
         expValSum = sum (map snd expList)
 
--- get reward for last step of training, the first step has reward 0\
+-- get reward for last step of training
 -- reward is calculated as (the sum of growth)
 getReward :: [Planet] -> Double
 getReward ps

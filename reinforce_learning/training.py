@@ -1,5 +1,6 @@
 import torch 
 from torch import nn
+from numpy import loadtxt
 
 # define network used
 net = nn.Sequential(
@@ -35,6 +36,9 @@ def update_model_param():
 
 # get training result from log.2 output file
 def get_trial_result():
+  one_trial = loadtxt("out/log2.txt", comments = "--")
+  # split one_trial of training result to multiple step's result
+  
   return 
 
 X = torch.tensor(
