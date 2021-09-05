@@ -649,6 +649,12 @@ generateAttack friends m g ai
         expList = map (\(pId, v) -> (pId, exp v)) list
         expValSum = sum (map snd expList)
 
+-- get reward for last step of training, the first step has reward 0\
+-- reward is calculated as (the sum of growth)
+getReward :: [Planet] -> Double
+getReward ps
+  = fromIntegral . sum $ [ g | (Planet _ _ (Growth g)) <- ps]
+
 -- the GREATEST ai that use reinforce learning
 skynet :: GameState -> AIState
        -> ([Order], Log, AIState)
@@ -656,24 +662,33 @@ skynet g@(GameState ps ws fs) ai
   | adjMap ai == M.empty = skynet g (ai {adjMap = getAdjMap g, planetWormholeMap = getPlanetWormMap g})
   | otherwise 
     = (orders, 
-        ("friends: " ++ show friend_planets) : 
-        map show (M.toList features) ++ 
-        ["explored outputs: " ++ show exploredNetOutputs] ++ 
-        ("orders: " : map show orders),
+        -- ("friends: " ++ show friend_planets) : 
+        map (\xs -> concatMap (\x -> " " ++ show x) xs) featureValRewardZip, -- show 2d matrix without '[' ']' and ','
+      --  [show featureValZip],
+        -- ("orders: " : map show orders),
       ai') 
   where 
     -- get all examined planets, including friend planets and adjacent planets
-    friend_planets = M.keys (ourPlanets g )
-    adjacent_planets = getAdjacentPlanets friend_planets ai
+    friendPlanets = ourPlanets g
+    friendPlanetIds = M.keys friendPlanets
+    adjacent_planets = getAdjacentPlanets friendPlanetIds ai
 
     -- get feature of each planet, forward through network
-    features = generateFeatures g (nub (concat [adjacent_planets, friend_planets]))
+    features = generateFeatures g (nub (concat [adjacent_planets, friendPlanetIds]))
     netOutputs = forward_batch features
 
     -- explore values by taking values in (-eplison, epsilon) range
     (ai', exploredNetOutputs) = explore netOutputs ai
 
-    orders = generateAttack friend_planets exploredNetOutputs g ai'
+    -- generate attack orders
+    orders = generateAttack friendPlanetIds exploredNetOutputs g ai'
+
+    -- get reward of last training step, value is copied to the start of every list in this step's log
+    reward = getReward (M.elems friendPlanets)
+
+    -- zip feature with explored output values
+    featureValZip = map (\(x, y) -> x ++ y) (zip (M.elems exploredNetOutputs) (M.elems features))
+    featureValRewardZip = map (reward : ) featureValZip
 
 deriving instance Generic PlanetRank
 deriving instance Generic PageRank

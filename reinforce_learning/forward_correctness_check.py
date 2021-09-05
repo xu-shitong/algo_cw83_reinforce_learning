@@ -28,15 +28,6 @@ def update_net_param(net, hidden1_w, hidden1_b, hidden2_w, hidden2_b, output_w, 
   net[4].weight = nn.Parameter(torch.tensor(output_w, dtype=torch.float) / 100)
   net[4].bias = nn.Parameter(torch.tensor(output_b, dtype=torch.float) / 100)
 
-# update network parameter in haskell file
-def update_model_param():
-  # use ssd to change value in haskell file
-  return
-
-# get training result from log.2 output file
-def get_trial_result():
-  return 
-
 X = torch.tensor(
   [[2.0, 55.0,  0.0, 98.0, 0.0, 0.0],
    [5.0, 98.0,  1.0, 0.0,  0.0, 0.0],
