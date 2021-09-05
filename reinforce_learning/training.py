@@ -149,10 +149,11 @@ for epoch_index in range(EPOCH_NUM):
   for step_num, grad_group in enumerate(grads):
     step_reward = rewards[step_num]
     for grad_index, grad in enumerate(grad_group):
-      acc_grad_group[grad_index] += step_reward * step_reward
+      acc_grad_group[grad_index] += step_reward * grad
 
   # apply gradient back to net
   for grad_index, param in enumerate(net.parameters()):
+    # print(acc_grad_group[grad_index])
     param.grad[:] = acc_grad_group[grad_index]
 
   # train use gradient setup in the last step
