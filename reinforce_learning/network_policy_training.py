@@ -3,9 +3,9 @@ from torch import nn, optim
 import ast
 import os
 import numpy
+from utils import update_model_param, read_trial_result
 
 # define consts and hyperparameters
-LOG_FILE_PATH = "out/log2.txt"
 DISCOUNT_RATIO = 0.9
 LEARNING_RATE = 1
 EPOCH_NUM = 30
@@ -17,25 +17,9 @@ VAL_NUM = 2 # each planet generate 2 values after forwarded through network
 net = nn.Sequential(
   nn.Linear(in_features=6, out_features=8), 
   nn.ReLU(inplace=True),
-  # nn.Linear(in_features=8, out_features=8),
-  # nn.ReLU(inplace=True),
   nn.Linear(in_features=8, out_features=2),
   nn.Sigmoid()
   )
-
-# update network parameter in haskell file
-# input: net is a network with 8, 8, 5 neurons each layer
-def update_model_param(net):
-  hidden1_w = net[0].weight.data.tolist()
-  hidden1_b = net[0].bias.data.tolist()
-  output_w = net[2].weight.data.tolist()
-  output_b = net[2].bias.data.tolist()
-  
-  # use ssd to change value in haskell file
-  param_names = ['hidden1_w', 'hidden1_b', 'output_w', 'output_b']
-  for i, param in enumerate([hidden1_w, hidden1_b, output_w, output_b]):
-    os.system(f"sed -i ''  '{463 + i}s/^.*$/{param_names[i]} = {param}/g' clever-ai/Submission2.hs")
-  return
 
 # get discounted reward, by using discount ratio R = DISCOUNTED_RATIO
 # input: list of reward, represent rewards from one trial
@@ -56,41 +40,6 @@ def get_discounted_normalized_reward(rewards):
   mean_reward = discounted_rewards.mean()
   std_reward = discounted_rewards.std()
   return (discounted_rewards - mean_reward) / std_reward
-
-# get training result from log.2 output file
-# output: features, discounted rewards, values of type torch.tensor
-#   features.shape = (step_num, adj_planet_num, FEATURE_NUM)
-#   rewards.shape = (step_num)
-#   values.shape = (step_num, adj_planet_num, VAL_NUM)
-def read_trial_result():
-  features = []
-  rewards = []
-  explored_vals = []
-  
-  # read data in dictionary from output file
-  file = open(LOG_FILE_PATH)
-  
-  line = file.readline()
-  set_size = 0
-  while line:
-    if line[0] == '-' or line[0] == '\n':
-      # line start with '-' or is empty, ignore
-      line = file.readline()
-      continue
-    data_dict = ast.literal_eval(line)
-    
-    features.append(data_dict['features'])
-    rewards.append(data_dict['reward'])
-    explored_vals.append(data_dict['vals'])
-    line = file.readline()
-    set_size += 1
-  
-  # process sets so that reward, features, vals with same index belong to the same step 
-  rewards.pop(0)
-  features.pop(set_size - 1)
-  explored_vals.pop(set_size - 1)
-  
-  return torch.tensor(features), get_discounted_normalized_reward(rewards), torch.tensor(explored_vals)
 
 # forward features through network, get unexplored vals
 # input: features of type torch.tensor
@@ -118,8 +67,7 @@ for epoch_index in range(EPOCH_NUM):
 
   # 4 get result 
   features, rewards, explore_vals = read_trial_result()
-
-  acc_loss = []
+  discount_normal_reward = get_discounted_normalized_reward(rewards)
 
   # 5 train and update parameter
   # grads is a list of (group of gradients), each group of gradient corrispond to gradients calculated from different trial step
@@ -141,12 +89,10 @@ for epoch_index in range(EPOCH_NUM):
       grad_group.append(param.grad)
     grads.append(grad_group)
 
-    acc_loss.append(l.detach().numpy())
-
   # get weighted mean of gradients
   acc_grad_group = [0] * len(grad_group[0])
   for step_num, grad_group in enumerate(grads):
-    step_reward = rewards[step_num]
+    step_reward = discount_normal_reward[step_num]
     for grad_index, grad in enumerate(grad_group):
       acc_grad_group[grad_index] += step_reward * grad
 
@@ -157,7 +103,7 @@ for epoch_index in range(EPOCH_NUM):
 
   # train use gradient setup in the last step
   trainer.step()
-  print(f"epoch {epoch_index+1} turns: {len(features)} acc loss: {numpy.mean(acc_loss)}")
+  print(f"epoch {epoch_index+1} turns: {len(features)} mean rewards: {numpy.mean(numpy.mean(rewards))}")
 
 print("=========== training finished ===========")
 print("latest parameters saved in haskell file")
