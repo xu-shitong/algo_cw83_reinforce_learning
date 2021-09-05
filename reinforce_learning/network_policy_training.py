@@ -2,11 +2,12 @@ import torch
 from torch import nn, optim
 import ast
 import os
+import numpy
 
 # define consts and hyperparameters
 LOG_FILE_PATH = "out/log2.txt"
-DISCOUNT_RATIO = 0.95
-LEARNING_RATE = 0.1
+DISCOUNT_RATIO = 0.9
+LEARNING_RATE = 1
 EPOCH_NUM = 30
 FEATURE_NUM = 5 # each planet takes 5 features
 VAL_NUM = 2 # each planet generate 2 values after forwarded through network
@@ -16,8 +17,8 @@ VAL_NUM = 2 # each planet generate 2 values after forwarded through network
 net = nn.Sequential(
   nn.Linear(in_features=6, out_features=8), 
   nn.ReLU(inplace=True),
-  nn.Linear(in_features=8, out_features=8),
-  nn.ReLU(inplace=True),
+  # nn.Linear(in_features=8, out_features=8),
+  # nn.ReLU(inplace=True),
   nn.Linear(in_features=8, out_features=2),
   nn.Sigmoid()
   )
@@ -27,14 +28,12 @@ net = nn.Sequential(
 def update_model_param(net):
   hidden1_w = net[0].weight.data.tolist()
   hidden1_b = net[0].bias.data.tolist()
-  hidden2_w = net[2].weight.data.tolist()
-  hidden2_b = net[2].bias.data.tolist()
-  output_w = net[4].weight.data.tolist()
-  output_b = net[4].bias.data.tolist()
+  output_w = net[2].weight.data.tolist()
+  output_b = net[2].bias.data.tolist()
   
   # use ssd to change value in haskell file
-  param_names = ['hidden1_w', 'hidden1_b', 'hidden2_w', 'hidden2_b', 'output_w', 'output_b']
-  for i, param in enumerate([hidden1_w, hidden1_b, hidden2_w, hidden2_b, output_w, output_b]):
+  param_names = ['hidden1_w', 'hidden1_b', 'output_w', 'output_b']
+  for i, param in enumerate([hidden1_w, hidden1_b, output_w, output_b]):
     os.system(f"sed -i ''  '{463 + i}s/^.*$/{param_names[i]} = {param}/g' clever-ai/Submission2.hs")
   return
 
@@ -120,7 +119,7 @@ for epoch_index in range(EPOCH_NUM):
   # 4 get result 
   features, rewards, explore_vals = read_trial_result()
 
-  acc_loss = 0
+  acc_loss = []
 
   # 5 train and update parameter
   # grads is a list of (group of gradients), each group of gradient corrispond to gradients calculated from different trial step
@@ -142,7 +141,7 @@ for epoch_index in range(EPOCH_NUM):
       grad_group.append(param.grad)
     grads.append(grad_group)
 
-    acc_loss += l
+    acc_loss.append(l.detach().numpy())
 
   # get weighted mean of gradients
   acc_grad_group = [0] * len(grad_group[0])
@@ -158,7 +157,7 @@ for epoch_index in range(EPOCH_NUM):
 
   # train use gradient setup in the last step
   trainer.step()
-  print(f"epoch {epoch_index+1} acc loss: {acc_loss}")
+  print(f"epoch {epoch_index+1} turns: {len(features)} acc loss: {numpy.mean(acc_loss)}")
 
 print("=========== training finished ===========")
 print("latest parameters saved in haskell file")
