@@ -1,5 +1,6 @@
 import os 
 import ast
+import torch
 
 LOG_FILE_PATH = "out/log2.txt"
 
