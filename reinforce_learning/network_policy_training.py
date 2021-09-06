@@ -1,12 +1,17 @@
+# Thie program is based on reinforce learning with neural network policy, 
+# training result: ai do no move, but delay for long time in order to get reward from having ships
+# code no longer useable, if wish to reuse, need to change:
+#   1. adapt network structure to fit the net used in Submission.hs file
+#   2. result get from utils' read_trial_result function are list of tensors, need to adapt forward funciton for that
+
 import torch 
 from torch import nn, optim
 import ast
 import os
 import numpy
-from utils import update_model_param, read_trial_result
+from utils import update_model_param, read_trial_result, get_discounted_reward
 
 # define consts and hyperparameters
-DISCOUNT_RATIO = 0.9
 LEARNING_RATE = 1
 EPOCH_NUM = 30
 FEATURE_NUM = 5 # each planet takes 5 features
@@ -20,16 +25,6 @@ net = nn.Sequential(
   nn.Linear(in_features=8, out_features=2),
   nn.Sigmoid()
   )
-
-# get discounted reward, by using discount ratio R = DISCOUNTED_RATIO
-# input: list of reward, represent rewards from one trial
-# output: list of reward, each discounted dr[i] = r[i] + r[i+1] * R + r[i+2] * R*R + ...
-def get_discounted_reward(rewards):
-  l = len(rewards)
-  for i in range(l-2, -1, -1):
-    # change rewards from the second last reward to the first
-    rewards[i] += rewards[i+1] * DISCOUNT_RATIO
-  return rewards
 
 # get discounted normalized reward
 # input: list of reward read from log file

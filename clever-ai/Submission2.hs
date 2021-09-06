@@ -460,10 +460,8 @@ epsilon = 0.2
 
 -- network parameters
 -- network contains 1 hidden layers, with 8 neurons, and one output layer, with 2 neurons 
-hidden1_w = [[-0.27372270822525024, -0.09934347867965698, 0.07231110334396362, 0.05411526560783386, -0.27611061930656433, -0.02236020565032959], [-1.4638885259628296, -1.0429664850234985, 0.5771410465240479, -1.8749738931655884, 0.7863191366195679, -3.2135612964630127], [-1.7366673946380615, -1.4535300731658936, 0.13418258726596832, -2.099849224090576, -0.6286602020263672, -3.358776092529297], [2.137606620788574, 2.861001968383789, 0.3769107758998871, 2.7497406005859375, -0.10140735656023026, 3.3287949562072754], [2.0682737827301025, 1.7295966148376465, -0.3243837356567383, 1.8888213634490967, -0.011788181960582733, 3.7079451084136963], [-0.20702841877937317, -1.5362086296081543, -0.33638620376586914, -0.2676934599876404, -0.7477601170539856, -0.3083086609840393], [0.535448431968689, 1.5531580448150635, -0.5025750398635864, 1.651976227760315, 0.6069328784942627, 2.542670488357544], [-0.6434374451637268, 1.6513596773147583, -0.1456981748342514, 0.05485115200281143, 0.4529551863670349, -2.2499330043792725]]
-hidden1_b = [0.3649985194206238, -0.9512311220169067, -0.5550647974014282, 0.9810331463813782, 0.7083409428596497, -0.4574057161808014, 0.2709932327270508, 0.21256515383720398]
-output_w = [[0.023654580116271973, 1.6567435264587402, 1.9245312213897705, -3.3097047805786133, -2.948739767074585, 2.463594675064087, -2.6815736293792725, -1.9792938232421875], [0.03625762462615967, -2.602534055709839, -2.4846224784851074, -3.3945960998535156, -3.3360090255737305, -0.0779384970664978, -2.1098175048828125, -0.8346042037010193]]
-output_b = [-1.137505292892456, -1.8508498668670654]
+output_w = [[-10.0, 0.36556267738342285, -4.665016174316406, -3.1749863624572754, 3.173731803894043, 7.3727569580078125], [9.830181121826172, -2.3512039184570312, 0.5191888809204102, 2.148134231567383, 0.3779420852661133, -8.942829132080078]]
+output_b = [3.871086359024048, -5.2879743576049805]
 
 -- get map from each planet to its adjacent planet
 getAdjMap :: GameState -> Map PlanetId [PlanetId]
@@ -567,8 +565,8 @@ forward_batch m
     forward x
       = output
       where 
-        layer1_out = relu (forward_one x hidden1_w hidden1_b)
-        output = sigmoid (forward_one layer1_out output_w output_b)
+        -- layer1_out = relu (forward_one x hidden1_w hidden1_b)
+        output = sigmoid (forward_one x output_w output_b)
 
 -- for each planet in the given map explore random value around its forward result 
 -- function ensured no two explored value use the same seed for rand generation
@@ -633,10 +631,10 @@ generateAttack friends m g ai
         expList = map (\(pId, v) -> (pId, exp v)) list
         expValSum = sum (map snd expList)
 
--- reward is calculated as (difference in the sum of growth + 0.1 * difference in ship sum)
+-- reward is calculated as (difference in the sum of growth + 0.01 * difference in ship sum)
 getReward :: GameState -> Double
 getReward g@(GameState ps _ fs)
-  = fromIntegral growthDiff + 0.1 * (fromIntegral shipDiff')
+  = fromIntegral growthDiff + 0.01 * (fromIntegral shipDiff')
   where 
     (growthDiff, shipDiff) 
       = foldr 
@@ -673,10 +671,10 @@ skynet g@(GameState ps ws fs) ai
         --     'feature': all adjacent planet's feature list, 2d array
         --     'vals': all adjacent planet's explored vals, 2d array } 
         ["{ 'reward': " ++ (show reward) ++
-        -- ", 'vals' : " ++ ((show . M.elems) $ exploredNetOutputs) ++ 
+        ", 'vals' : " ++ ((show . M.elems) $ netOutputs) ++ 
         ", 'features': " ++ ((show . M.elems) $ features) ++ 
         "}"],
-      ai') 
+      ai) 
   where 
     -- get all examined planets, including friend planets and adjacent planets
     friendPlanets = ourPlanets g
@@ -692,7 +690,7 @@ skynet g@(GameState ps ws fs) ai
 
     -- generate attack orders
     -- orders = generateAttack friendPlanetIds exploredNetOutputs g ai' -- orders with exploreing
-    orders = generateAttack friendPlanetIds netOutputs g ai' -- orders without exploreing 
+    orders = generateAttack friendPlanetIds netOutputs g ai -- orders without exploreing 
     
 
     -- get reward of last training step, value is copied to the start of every list in this step's log
