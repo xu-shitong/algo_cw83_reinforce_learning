@@ -52,4 +52,4 @@ def read_trial_result():
   features.pop(set_size - 1)
   explored_vals.pop(set_size - 1)
   
-  return torch.tensor(features), rewards, torch.tensor(explored_vals)
+  return torch.tensor(features), torch.tensor(rewards), torch.tensor(explored_vals)

@@ -67,7 +67,7 @@ for epoch_index in range(EPOCH_NUM):
 
   # 4 get result 
   features, rewards, explore_vals = read_trial_result()
-  discount_normal_reward = get_discounted_normalized_reward(rewards)
+  discount_normal_reward = get_discounted_normalized_reward(rewards.numpy())
 
   # 5 train and update parameter
   # grads is a list of (group of gradients), each group of gradient corrispond to gradients calculated from different trial step

@@ -673,7 +673,7 @@ skynet g@(GameState ps ws fs) ai
         --     'feature': all adjacent planet's feature list, 2d array
         --     'vals': all adjacent planet's explored vals, 2d array } 
         ["{ 'reward': " ++ (show reward) ++
-        ", 'vals' : " ++ ((show . M.elems) $ exploredNetOutputs) ++ 
+        -- ", 'vals' : " ++ ((show . M.elems) $ exploredNetOutputs) ++ 
         ", 'features': " ++ ((show . M.elems) $ features) ++ 
         "}"],
       ai') 
@@ -688,10 +688,12 @@ skynet g@(GameState ps ws fs) ai
     netOutputs = forward_batch features
 
     -- explore values by taking values in (-eplison, epsilon) range
-    (ai', exploredNetOutputs) = explore netOutputs ai
+    -- (ai', exploredNetOutputs) = explore netOutputs ai
 
     -- generate attack orders
-    orders = generateAttack friendPlanetIds exploredNetOutputs g ai'
+    -- orders = generateAttack friendPlanetIds exploredNetOutputs g ai' -- orders with exploreing
+    orders = generateAttack friendPlanetIds netOutputs g ai' -- orders without exploreing 
+    
 
     -- get reward of last training step, value is copied to the start of every list in this step's log
     reward = getReward g
