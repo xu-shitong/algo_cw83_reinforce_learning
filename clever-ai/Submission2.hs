@@ -442,7 +442,7 @@ dangerRating pId g
 
 type PlanetFeature = Map PlanetId [Double] -- neural net feature of a planet
 
-feature_num = 6
+feature_num = 3
 -- index of features 
 gen_index = 0 -- index of generate rate feature
 amount_index = 1
@@ -450,6 +450,7 @@ is_friend = 2
 surround_index = 3
 friend_to_index = 4
 enemy_to_index = 5
+conqour_index = 2
 
 -- index of outputs
 valueIndex = 0
@@ -460,8 +461,8 @@ epsilon = 0.2
 
 -- network parameters
 -- network contains 1 hidden layers, with 8 neurons, and one output layer, with 2 neurons 
-output_w = [[-10.0, 0.36556267738342285, -4.665016174316406, -3.1749863624572754, 3.173731803894043, 7.3727569580078125], [9.830181121826172, -2.3512039184570312, 0.5191888809204102, 2.148134231567383, 0.3779420852661133, -8.942829132080078]]
-output_b = [3.871086359024048, -5.2879743576049805]
+output_w = [[-10.0, -4.692211151123047, 7.01871395111084], [7.698912143707275, 5.562724590301514, -5.375877857208252]]
+output_b = [-10.0, 10.0]
 
 -- get map from each planet to its adjacent planet
 getAdjMap :: GameState -> Map PlanetId [PlanetId]
@@ -492,16 +493,33 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
 
     featureTable :: PlanetFeature
 
-    -- 1. fill in feature value of gen rate, ship number, is friend; leave surrounding, frind, enemy fleet features zero
-    featureTable = foldr (\pId m -> M.insert pId (getGenVal pId ++ (replicate (feature_num - 3) 0)) m) M.empty adjPs
-    -- 2. get total surrounding enemy number
-    featureTable' = M.foldrWithKey (\ek ep m -> updateSurroundFeature m ek ep) featureTable enemyPlanets
-    -- 3. get fleet transfering to the planet
-    featureTable'' = foldr (\(Fleet owner s w t) m -> updateFleetFeature m owner s w t) featureTable' fs
+    -- -- feature generator used in network policy
+    -- -- 1. fill in feature value of gen rate, ship number, is friend; leave surrounding, frind, enemy fleet features zero
+    -- featureTable = foldr (\pId m -> M.insert pId (getPlanetValNeuralNet pId ++ (replicate (feature_num - 3) 0)) m) M.empty adjPs
+    -- -- 2. get total surrounding enemy number
+    -- featureTable' = M.foldrWithKey (\ek ep m -> updateSurroundFeature m ek ep) featureTable enemyPlanets
+    -- -- 3. get fleet transfering to the planet
+    -- featureTable'' = foldr (\(Fleet owner s w t) m -> updateFleetFeature m owner s w t) featureTable' fs
     
+    -- feature generator used in generic policy
+    -- 1. fill in feature value of gen rate, ship number; leave conqour features zero
+    featureTable = foldr (\pId m -> M.insert pId (getPlanetValGeneric pId ++ (replicate (feature_num - 2) 0)) m) M.empty adjPs
+    -- 2. get conqour value, = friend fleets - enemy fleets
+    featureTable'' = foldr (\(Fleet owner s w t) m -> updateConqourFeature m owner s w t) featureTable fs
+
+    -- get generate rate, ship number of planet with given pId
+    getPlanetValGeneric :: PlanetId -> [Double]
+    getPlanetValGeneric pId 
+      | owner == Owned Player1 = [fromIntegral g, fromIntegral s]
+      | owner == Neutral       = [fromIntegral g, -fromIntegral s]
+      | otherwise              = [-fromIntegral g, -fromIntegral s]
+      where 
+        (Planet owner (Ships s) (Growth g)) = lookupPlanet pId gs
+                    
+
     -- get generate rate, ship number, is friend of planet with given pId
-    getGenVal :: PlanetId -> [Double]
-    getGenVal pId 
+    getPlanetValNeuralNet :: PlanetId -> [Double]
+    getPlanetValNeuralNet pId 
       = [fromIntegral g, fromIntegral s, isFriend]
       where 
         (Planet owner (Ships s) (Growth g)) = lookupPlanet pId gs
@@ -530,6 +548,17 @@ generateFeatures gs@(GameState allPs ws fs) adjPs
                                    (addInPlace list enemy_to_index enemyFleet)
                                    friend_to_index 
                                    friendFleet)
+
+    -- update conquer feature, return updated map
+    updateConqourFeature :: PlanetFeature -> Player -> Ships -> WormholeId -> Turns -> PlanetFeature
+    updateConqourFeature prevMap owner (Ships s) wId (Turns t)
+      = M.adjust addedFeature targetPId prevMap
+      where 
+        targetPId = target (lookupWormhole wId gs)
+        friendFleet = if owner == Player1 then (fromIntegral s) / (fromIntegral t) else 0
+        enemyFleet  = if owner == Player2 then (fromIntegral s) / (fromIntegral t) else 0
+
+        addedFeature = (\list -> addInPlace list conqour_index (friendFleet - enemyFleet))
 
     -- return a list, which add a given value on given position
     addInPlace :: [Double] -> Int -> Double -> [Double]
@@ -671,8 +700,10 @@ skynet g@(GameState ps ws fs) ai
         --     'feature': all adjacent planet's feature list, 2d array
         --     'vals': all adjacent planet's explored vals, 2d array } 
         ["{ 'reward': " ++ (show reward) ++
-        ", 'vals' : " ++ ((show . M.elems) $ netOutputs) ++ 
-        ", 'features': " ++ ((show . M.elems) $ features) ++ 
+        -- ", 'vals' : " ++ ((show . M.elems) $ netOutputs) ++ 
+        -- ", 'features': " ++ ((show . M.elems) $ features) ++ 
+        ", 'vals' : [] " ++ 
+        ", 'features': [] "++ 
         "}"],
       ai) 
   where 

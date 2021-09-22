@@ -15,7 +15,7 @@ def update_model_param(net):
   # use ssd to change value in haskell file
   param_names = ['output_w', 'output_b']
   for i, param in enumerate([output_w, output_b]):
-    os.system(f"sed -i ''  '{463 + i}s/^.*$/{param_names[i]} = {param}/g' clever-ai/Submission2.hs")
+    os.system(f"sed -i ''  '{464 + i}s/^.*$/{param_names[i]} = {param}/g' clever-ai/Submission2.hs")
   return
 
 # get training result from log.2 output file

@@ -3,6 +3,8 @@
 # code no longer useable, if wish to reuse, need to change:
 #   1. adapt network structure to fit the net used in Submission.hs file
 #   2. result get from utils' read_trial_result function are list of tensors, need to adapt forward funciton for that
+#   3. features from haskell file has changed, require adaptation
+#   4. haskell file no longer use explore, if use neural net policy, need adaptation
 
 import torch 
 from torch import nn, optim
